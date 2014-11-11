@@ -1,7 +1,6 @@
 package model;
 
 import model.base.BaseEntity;
-import model.user.User;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -28,7 +27,7 @@ public class SaleOrder extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Garage garage;
     @ManyToOne(fetch = FetchType.LAZY)
-    private User installer;
+    private Technician technician;
 
     public Long getDocNum() {
         return docNum;
@@ -158,11 +157,11 @@ public class SaleOrder extends BaseEntity {
         this.garage = garage;
     }
 
-    public User getInstaller() {
-        return installer;
+    public Technician getTechnician() {
+        return technician;
     }
 
-    public void setInstaller(User installer) {
-        this.installer = installer;
+    public void setTechnician(Technician technician) {
+        this.technician = technician;
     }
 }
