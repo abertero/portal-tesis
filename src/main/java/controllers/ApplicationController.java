@@ -8,6 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("/")
 public class ApplicationController {
+
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView applicationIndex() {
         ModelAndView mv = new ModelAndView("home");
