@@ -1,8 +1,9 @@
-package model;
+package portal.model;
 
-import model.base.NamedBaseEntity;
+import portal.model.base.NamedBaseEntity;
 
 import javax.persistence.Entity;
+import java.util.UUID;
 
 @Entity
 public class Technician extends NamedBaseEntity {
@@ -14,5 +15,12 @@ public class Technician extends NamedBaseEntity {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public static Technician dummy() {
+        Technician dummy = new Technician();
+        dummy.setName("name_" + UUID.randomUUID().toString());
+        dummy.setLastName("last_name_" + UUID.randomUUID().toString());
+        return dummy;
     }
 }

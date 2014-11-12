@@ -1,6 +1,6 @@
-package model.user;
+package portal.model.user;
 
-import model.base.NamedBaseEntity;
+import portal.model.base.NamedBaseEntity;
 
 import javax.persistence.Entity;
 
