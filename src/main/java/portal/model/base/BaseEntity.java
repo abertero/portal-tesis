@@ -1,4 +1,4 @@
-package model.base;
+package portal.model.base;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;

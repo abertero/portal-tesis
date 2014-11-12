@@ -1,8 +1,9 @@
-package model;
+package portal.model;
 
-import model.base.NamedBaseEntity;
+import portal.model.base.NamedBaseEntity;
 
 import javax.persistence.Entity;
+import java.util.UUID;
 
 @Entity
 public class Garage extends NamedBaseEntity {
@@ -14,5 +15,12 @@ public class Garage extends NamedBaseEntity {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public static Garage dummy() {
+        Garage dummy = new Garage();
+        dummy.setName("name_" + UUID.randomUUID().toString());
+        dummy.setAddress("address_" + UUID.randomUUID().toString());
+        return dummy;
     }
 }
