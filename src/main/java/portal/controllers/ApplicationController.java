@@ -75,7 +75,8 @@ public class ApplicationController {
     @RequestMapping(value = "order/{altKeyOrder}", method = RequestMethod.GET)
     public ModelAndView saleOrderDetail(@PathVariable String altKeyOrder) {
         ModelAndView mv = new ModelAndView("saleOrder");
-        mv.addObject("saleOrder", SaleOrder.dummy());
+//        mv.addObject("saleOrder", SaleOrder.dummy());
+        mv.addObject("saleOrder", SaleOrder.findAll());
         return mv;
     }
 

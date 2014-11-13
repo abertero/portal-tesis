@@ -1,6 +1,7 @@
 package portal.config;
 
 import org.springframework.context.annotation.*;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.jolbox.bonecp.BoneCPDataSource;
@@ -22,6 +23,7 @@ import java.util.Properties;
 @Configuration
 @ComponentScan(basePackages = {"portal.controllers"})
 @EnableWebMvc
+@EnableTransactionManagement
 @ImportResource("classpath:config/applicationContext.xml")
 @PropertySource("classpath:config/application.properties")
 public class ApplicationContext {
@@ -43,6 +45,8 @@ public class ApplicationContext {
 
     private static final String PROPERTY_NAME_MESSAGESOURCE_BASENAME = "message.source.basename";
     private static final String PROPERTY_NAME_MESSAGESOURCE_USE_CODE_AS_DEFAULT_MESSAGE = "message.source.use.code.as.default.message";
+
+    public static final String PROPERTY_NAME_PERSISTENCE_UNIT_NAME = "persistenceUnit";
 
     @Resource
     private Environment environment;
@@ -84,6 +88,7 @@ public class ApplicationContext {
         jpaProterties.put(PROPERTY_NAME_HIBERNATE_HBM2DDL_AUTO, environment.getRequiredProperty(PROPERTY_NAME_HIBERNATE_HBM2DDL_AUTO));
 
         entityManagerFactoryBean.setJpaProperties(jpaProterties);
+        entityManagerFactoryBean.setPersistenceUnitName(PROPERTY_NAME_PERSISTENCE_UNIT_NAME);
 
         return entityManagerFactoryBean;
     }
