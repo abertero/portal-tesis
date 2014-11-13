@@ -3,7 +3,9 @@ package portal.model;
 import portal.model.base.BaseEntity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -178,6 +180,7 @@ public class SaleOrder extends BaseEntity {
 
     public static SaleOrder dummy() {
         SaleOrder dummy = new SaleOrder();
+        dummy.setAltKey(UUID.randomUUID().toString());
         dummy.setCardName("card_name_" + UUID.randomUUID().toString());
         dummy.setCardCode("card_code_" + UUID.randomUUID().toString());
         dummy.setPrjName("prj_na,e_" + UUID.randomUUID().toString());
@@ -196,5 +199,17 @@ public class SaleOrder extends BaseEntity {
         dummy.setDocDate(new Date());
         dummy.setVehicle(Vehicle.dummy());
         return dummy;
+    }
+
+    public static List<SaleOrder> dummyList() {
+        return dummyList(10);
+    }
+
+    public static List<SaleOrder> dummyList(int N) {
+        List<SaleOrder> dummyList = new ArrayList<SaleOrder>();
+        for (int i = 0; i < N; i++) {
+            dummyList.add(dummy());
+        }
+        return dummyList;
     }
 }

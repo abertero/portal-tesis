@@ -68,6 +68,7 @@ public class ApplicationController {
     @RequestMapping(value = "order", method = RequestMethod.GET)
     public ModelAndView saleOrderList() {
         ModelAndView mv = new ModelAndView("saleOrderList");
+        mv.addObject("salesOrder", SaleOrder.dummyList());
         return mv;
     }
 
