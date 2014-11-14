@@ -8,9 +8,9 @@
 
 <div>
   <div>
-    <label><spring:message code="saleOrder.label.docNumber"/></label>
+    <label><spring:message code="saleOrder.label.docNum"/></label>
 
-    <div><c:out value="${saleOrder.docNumber}"/></div>
+    <div><c:out value="${saleOrder.docNum}"/></div>
     <label><spring:message code="saleOrder.label.vehicle"/></label>
 
     <div><c:out value="${saleOrder.vehicle.name}"/></div>
