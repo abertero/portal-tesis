@@ -6,9 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-/**
- * @author Arbol Logika S.A..
- */
 @Component("_spring_scg")
 public class Spring {
     private static final Logger logger = LoggerFactory.getLogger(Spring.class);
@@ -16,8 +13,8 @@ public class Spring {
     private static ApplicationContext applicationContext;
 
     @Autowired
-    public void setApplicationContext(ApplicationContext applicationContext_) {
-        applicationContext = applicationContext_;
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
         logger.info("Inicializado");
     }
 
