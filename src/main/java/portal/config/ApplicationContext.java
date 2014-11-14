@@ -46,8 +46,6 @@ public class ApplicationContext {
     private static final String PROPERTY_NAME_MESSAGESOURCE_BASENAME = "message.source.basename";
     private static final String PROPERTY_NAME_MESSAGESOURCE_USE_CODE_AS_DEFAULT_MESSAGE = "message.source.use.code.as.default.message";
 
-    public static final String PROPERTY_NAME_PERSISTENCE_UNIT_NAME = "persistenceUnit";
-
     @Resource
     private Environment environment;
 
@@ -88,7 +86,6 @@ public class ApplicationContext {
         jpaProterties.put(PROPERTY_NAME_HIBERNATE_HBM2DDL_AUTO, environment.getRequiredProperty(PROPERTY_NAME_HIBERNATE_HBM2DDL_AUTO));
 
         entityManagerFactoryBean.setJpaProperties(jpaProterties);
-        entityManagerFactoryBean.setPersistenceUnitName(PROPERTY_NAME_PERSISTENCE_UNIT_NAME);
 
         return entityManagerFactoryBean;
     }
