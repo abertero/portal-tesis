@@ -28,14 +28,14 @@ public class JPA {
     private static EntityManagerFactory emf;
 
     @PersistenceContext
-    public void setEm(EntityManager em_) {
-        em = em_;
+    public void setEm(EntityManager em) {
+        this.em = em;
         logger.info("JPA inicializado");
     }
 
     @Autowired
-    public void setEmf(EntityManagerFactory emf_) {
-        emf = emf_;
+    public void setEmf(EntityManagerFactory emf) {
+        this.emf = emf;
     }
 
     public static EntityManager em() {

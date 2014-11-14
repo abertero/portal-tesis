@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import portal.model.Garage;
 import portal.model.SaleOrder;
+import portal.model.Technician;
 
 @Controller
 @RequestMapping("/")
@@ -56,33 +58,37 @@ public class ApplicationController {
     @RequestMapping(value = "garage", method = RequestMethod.GET)
     public ModelAndView garageList() {
         ModelAndView mv = new ModelAndView("garageList");
+        mv.addObject("garages", Garage.findAll());
         return mv;
     }
 
     @RequestMapping(value = "garage/{altKeyGarage}", method = RequestMethod.GET)
     public ModelAndView garageDetail(@PathVariable String altKeyGarage) {
         ModelAndView mv = new ModelAndView("garage");
+        mv.addObject("garage", Garage.findByAltKey(altKeyGarage));
         return mv;
     }
 
     @RequestMapping(value = "order", method = RequestMethod.GET)
     public ModelAndView saleOrderList() {
         ModelAndView mv = new ModelAndView("saleOrderList");
-        mv.addObject("salesOrder", SaleOrder.dummyList());
+//        mv.addObject("salesOrder", SaleOrder.dummyList());
+        mv.addObject("salesOrder", SaleOrder.findAll());
         return mv;
     }
 
     @RequestMapping(value = "order/{altKeyOrder}", method = RequestMethod.GET)
     public ModelAndView saleOrderDetail(@PathVariable String altKeyOrder) {
         ModelAndView mv = new ModelAndView("saleOrder");
-        mv.addObject("saleOrder", SaleOrder.dummy());
-//        mv.addObject("saleOrder", SaleOrder.findAll());
+//        mv.addObject("saleOrder", SaleOrder.dummy());
+        mv.addObject("saleOrder", SaleOrder.findByAltKey(altKeyOrder));
         return mv;
     }
 
     @RequestMapping(value = "technician", method = RequestMethod.GET)
     public ModelAndView technicianList() {
         ModelAndView mv = new ModelAndView("technicianList");
+        mv.addObject("technicians", Technician.findAll());
         return mv;
     }
 

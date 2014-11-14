@@ -1,5 +1,6 @@
 package portal.model;
 
+import portal.config.JPA;
 import portal.model.base.BaseEntity;
 
 import javax.persistence.*;
@@ -212,4 +213,17 @@ public class SaleOrder extends BaseEntity {
         }
         return dummyList;
     }
+
+    public static List<SaleOrder> findAll() {
+        return JPA.findAll(SaleOrder.class);
+    }
+
+    public static SaleOrder findById(Long id) {
+        return JPA.em().find(SaleOrder.class, id);
+    }
+
+    public static SaleOrder findByAltKey(String altKey) {
+        return JPA.findByAltKey(SaleOrder.class, altKey);
+    }
+
 }
