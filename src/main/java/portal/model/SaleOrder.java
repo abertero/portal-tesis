@@ -1,9 +1,13 @@
-package model;
+package portal.model;
 
-import model.base.BaseEntity;
+import portal.config.JPA;
+import portal.model.base.BaseEntity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
 public class SaleOrder extends BaseEntity {
@@ -28,7 +32,10 @@ public class SaleOrder extends BaseEntity {
     private Garage garage;
     @ManyToOne(fetch = FetchType.LAZY)
     private Technician technician;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Vehicle vehicle;
 
+    //<editor-fold desc="Getters and setters">
     public Long getDocNum() {
         return docNum;
     }
@@ -164,4 +171,63 @@ public class SaleOrder extends BaseEntity {
     public void setTechnician(Technician technician) {
         this.technician = technician;
     }
+
+    public Vehicle getVehicle() {
+        return vehicle;
+    }
+
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Static methods">
+    public static SaleOrder dummy() {
+        SaleOrder dummy = new SaleOrder();
+        dummy.setAltKey(UUID.randomUUID().toString());
+        dummy.setCardName("card_name_" + UUID.randomUUID().toString());
+        dummy.setCardCode("card_code_" + UUID.randomUUID().toString());
+        dummy.setPrjName("prj_na,e_" + UUID.randomUUID().toString());
+        dummy.setuAuBodDestino("u_au_bod_destino_" + UUID.randomUUID().toString());
+        dummy.setuAuChasis("u_au_chasis_" + UUID.randomUUID().toString());
+        dummy.setuAuCodVend("u_au_cod_vend_" + UUID.randomUUID().toString());
+        dummy.setWhsCode("whs_code_" + UUID.randomUUID().toString());
+        dummy.setuAuPatente("u_au_patente_" + UUID.randomUUID().toString());
+        dummy.setQuantity(23L);
+        dummy.setuAuComision(32923D);
+        dummy.setuAuNameVend("u_au_name_vend_" + UUID.randomUUID().toString());
+        dummy.setuAuLastNameVend("u_au_last_name_vend_" + UUID.randomUUID().toString());
+        dummy.setDocNum(312931L);
+        dummy.setGarage(Garage.dummy());
+        dummy.setTechnician(Technician.dummy());
+        dummy.setDocDate(new Date());
+        dummy.setVehicle(Vehicle.dummy());
+        return dummy;
+    }
+
+    public static List<SaleOrder> dummyList() {
+        return dummyList(10);
+    }
+
+    public static List<SaleOrder> dummyList(int N) {
+        List<SaleOrder> dummyList = new ArrayList<SaleOrder>();
+        for (int i = 0; i < N; i++) {
+            dummyList.add(dummy());
+        }
+        return dummyList;
+    }
+
+    public static List<SaleOrder> findAll() {
+        return JPA.findAll(SaleOrder.class);
+    }
+
+    public static SaleOrder findById(Long id) {
+        return JPA.em().find(SaleOrder.class, id);
+    }
+
+    public static SaleOrder findByAltKey(String altKey) {
+        return JPA.findByAltKey(SaleOrder.class, altKey);
+    }
+    //</editor-fold>
+
 }

@@ -1,0 +1,3 @@
+<div style="float:right;">
+  <p><a href="${ctx}/loggout"><spring:message code="menu.loggout"/></a></p>
+</div>

@@ -1,6 +1,7 @@
 package portal.config;
 
 import org.springframework.context.annotation.*;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.jolbox.bonecp.BoneCPDataSource;
@@ -22,11 +23,12 @@ import java.util.Properties;
 @Configuration
 @ComponentScan(basePackages = {"portal.controllers"})
 @EnableWebMvc
+@EnableTransactionManagement
 @ImportResource("classpath:config/applicationContext.xml")
 @PropertySource("classpath:config/application.properties")
 public class ApplicationContext {
 
-    private static final String VIEW_RESOLVER_PREFIX = "/WEB-INF/view/";
+    private static final String VIEW_RESOLVER_PREFIX = "/WEB-INF/views/";
     private static final String VIEW_RESOLVER_SUFFIX = ".jsp";
 
     private static final String PROPERTY_NAME_DATABASE_DRIVER = "db.driver";
@@ -38,6 +40,7 @@ public class ApplicationContext {
     private static final String PROPERTY_NAME_HIBERNATE_FORMAT_SQL = "hibernate.format_sql";
     private static final String PROPERTY_NAME_HIBERNATE_NAMING_STRATEGY = "hibernate.ejb.naming_strategy";
     private static final String PROPERTY_NAME_HIBERNATE_SHOW_SQL = "hibernate.show_sql";
+    private static final String PROPERTY_NAME_HIBERNATE_HBM2DDL_AUTO = "hibernate.hbm2ddl.auto";
     private static final String PROPERTY_NAME_ENTITYMANAGER_PACKAGES_TO_SCAN = "entitymanager.packages.to.scan";
 
     private static final String PROPERTY_NAME_MESSAGESOURCE_BASENAME = "message.source.basename";
@@ -80,6 +83,7 @@ public class ApplicationContext {
         jpaProterties.put(PROPERTY_NAME_HIBERNATE_FORMAT_SQL, environment.getRequiredProperty(PROPERTY_NAME_HIBERNATE_FORMAT_SQL));
         jpaProterties.put(PROPERTY_NAME_HIBERNATE_NAMING_STRATEGY, environment.getRequiredProperty(PROPERTY_NAME_HIBERNATE_NAMING_STRATEGY));
         jpaProterties.put(PROPERTY_NAME_HIBERNATE_SHOW_SQL, environment.getRequiredProperty(PROPERTY_NAME_HIBERNATE_SHOW_SQL));
+        jpaProterties.put(PROPERTY_NAME_HIBERNATE_HBM2DDL_AUTO, environment.getRequiredProperty(PROPERTY_NAME_HIBERNATE_HBM2DDL_AUTO));
 
         entityManagerFactoryBean.setJpaProperties(jpaProterties);
 
