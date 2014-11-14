@@ -11,6 +11,7 @@ import java.util.UUID;
 public class Garage extends NamedBaseEntity {
     private String address;
 
+    //<editor-fold desc="Getters and setters">
     public String getAddress() {
         return address;
     }
@@ -18,6 +19,7 @@ public class Garage extends NamedBaseEntity {
     public void setAddress(String address) {
         this.address = address;
     }
+    //</editor-fold>
 
     public static Garage dummy() {
         Garage dummy = new Garage();
@@ -26,6 +28,7 @@ public class Garage extends NamedBaseEntity {
         return dummy;
     }
 
+    //<editor-fold desc="Static methods">
     public static List<Garage> findAll() {
         return JPA.findAll(Garage.class);
     }
@@ -37,4 +40,5 @@ public class Garage extends NamedBaseEntity {
     public static Garage findByAltKey(String altKey) {
         return JPA.findByAltKey(Garage.class, altKey);
     }
+    //</editor-fold>
 }

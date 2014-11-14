@@ -35,6 +35,7 @@ public class SaleOrder extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Vehicle vehicle;
 
+    //<editor-fold desc="Getters and setters">
     public Long getDocNum() {
         return docNum;
     }
@@ -178,7 +179,9 @@ public class SaleOrder extends BaseEntity {
     public void setVehicle(Vehicle vehicle) {
         this.vehicle = vehicle;
     }
+    //</editor-fold>
 
+    //<editor-fold desc="Static methods">
     public static SaleOrder dummy() {
         SaleOrder dummy = new SaleOrder();
         dummy.setAltKey(UUID.randomUUID().toString());
@@ -225,5 +228,6 @@ public class SaleOrder extends BaseEntity {
     public static SaleOrder findByAltKey(String altKey) {
         return JPA.findByAltKey(SaleOrder.class, altKey);
     }
+    //</editor-fold>
 
 }
