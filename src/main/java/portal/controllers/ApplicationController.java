@@ -1,14 +1,13 @@
 package portal.controllers;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import portal.model.Garage;
 import portal.model.SaleOrder;
 import portal.model.Technician;
+import portal.model.user.User;
 
 @Controller
 @RequestMapping("/")
@@ -23,7 +22,11 @@ public class ApplicationController {
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public ModelAndView login(@RequestParam String username,
                               @RequestParam String password) {
-        return mainMenu();
+        boolean validate = User.validate(username, password);
+        if (validate) {
+            return mainMenu();
+        }
+        return applicationIndex();
     }
 
     @RequestMapping(value = "loggout", method = RequestMethod.POST)
@@ -35,6 +38,19 @@ public class ApplicationController {
     public ModelAndView registerUser() {
         ModelAndView mv = new ModelAndView("registerUser");
         return mv;
+    }
+
+    @RequestMapping(value = "createUser", method = RequestMethod.POST)
+    public ModelAndView createUser(@ModelAttribute User user, BindingResult errors) {
+        user.validateRegisterForm(errors);
+        if (errors.hasErrors()) {
+            return registerUser();
+        }
+        boolean result = user.register();
+        if (result) {
+            return mainMenu();
+        }
+        return registerUser();
     }
 
     @RequestMapping(value = "menu", method = RequestMethod.GET)
