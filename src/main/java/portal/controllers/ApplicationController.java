@@ -19,6 +19,115 @@ public class ApplicationController {
         return mv;
     }
 
+    @RequestMapping(value = "menu", method = RequestMethod.GET)
+    public ModelAndView mainMenu() {
+        ModelAndView mv = new ModelAndView("mainMenu");
+        return mv;
+    }
+
+    @RequestMapping(value = "register", method = RequestMethod.GET)
+    public ModelAndView registerUser() {
+        return doUser(new User(), true);
+    }
+
+    @RequestMapping(value = "user", method = RequestMethod.GET)
+    public ModelAndView userList() {
+        ModelAndView mv = new ModelAndView("userList");
+        mv.addObject("users", User.findAll());
+        return mv;
+    }
+
+    @RequestMapping(value = "user/{altKeyUser}", method = RequestMethod.GET)
+    public ModelAndView userDetail(@PathVariable String altKeyUser, @RequestParam Boolean canEdit) {
+        return doUser(User.findByAltKey(altKeyUser), canEdit != null && canEdit);
+    }
+
+    @RequestMapping(value = "technician", method = RequestMethod.GET)
+    public ModelAndView technicianList() {
+        ModelAndView mv = new ModelAndView("technicianList");
+        mv.addObject("technicians", Technician.findAll());
+        return mv;
+    }
+
+    @RequestMapping(value = "manager/technician/{altKeyTechnician}", method = RequestMethod.GET)
+    public ModelAndView technicianDetail(@PathVariable String altKeyTechnician, @RequestParam Boolean canEdit) {
+        return doTechnician(Technician.findByAltKey(altKeyTechnician), canEdit != null && canEdit);
+    }
+
+    @RequestMapping(value = "garage", method = RequestMethod.GET)
+    public ModelAndView garageList() {
+        ModelAndView mv = new ModelAndView("garageList");
+        mv.addObject("garages", Garage.findAll());
+        return mv;
+    }
+
+    @RequestMapping(value = "garage/{altKeyGarage}", method = RequestMethod.GET)
+    public ModelAndView garageDetail(@PathVariable String altKeyGarage, @RequestParam Boolean canEdit) {
+        return doGarage(Garage.findByAltKey(altKeyGarage), canEdit);
+    }
+
+    @RequestMapping(value = "order", method = RequestMethod.GET)
+    public ModelAndView saleOrderList() {
+        ModelAndView mv = new ModelAndView("saleOrderList");
+        mv.addObject("salesOrder", SaleOrder.findAll());
+        return mv;
+    }
+
+    @RequestMapping(value = "order/{altKeyOrder}", method = RequestMethod.GET)
+    public ModelAndView saleOrderDetail(@PathVariable String altKeyOrder, @RequestParam Boolean canEdit) {
+        return doSaleOrder(SaleOrder.findByAltKey(altKeyOrder), canEdit);
+    }
+
+    @RequestMapping(value = "parking", method = RequestMethod.GET)
+    public ModelAndView parkingList() {
+        ModelAndView mv = new ModelAndView("parkingList");
+        return mv;
+    }
+
+    //<editor-fold desc="Model">
+    private ModelAndView doUser(User user, boolean canEdit) {
+        ModelAndView mv = new ModelAndView("user");
+        mv.addObject("user", user);
+        mv.addObject("canEdit", canEdit);
+        return mv;
+    }
+
+    private ModelAndView doTechnician(Technician technician, boolean canEdit) {
+        ModelAndView mv = new ModelAndView("technician");
+        mv.addObject("technician", technician);
+        mv.addObject("canEdit", canEdit);
+        return mv;
+    }
+
+    private ModelAndView doGarage(Garage garage, boolean canEdit) {
+        ModelAndView mv = new ModelAndView("garage");
+        mv.addObject("garage", garage);
+        mv.addObject("canEdit", canEdit);
+        return mv;
+    }
+
+    private ModelAndView doSaleOrder(SaleOrder saleOrder, boolean canEdit) {
+        ModelAndView mv = new ModelAndView("saleOrder");
+        mv.addObject("saleOrder", saleOrder);
+        mv.addObject("canEdit", canEdit);
+        return mv;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Actions">
+    @RequestMapping(value = "saveUser", method = RequestMethod.POST)
+    public ModelAndView saveUser(@ModelAttribute User user, BindingResult errors) {
+        user.validateUserForm(errors);
+        if (errors.hasErrors()) {
+            return doUser(user, true);
+        }
+        boolean result = user.save();
+        if (result) {
+            return mainMenu();
+        }
+        return registerUser();
+    }
+
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public ModelAndView login(@RequestParam String username,
                               @RequestParam String password) {
@@ -33,84 +142,5 @@ public class ApplicationController {
     public ModelAndView loggout() {
         return applicationIndex();
     }
-
-    @RequestMapping(value = "register", method = RequestMethod.GET)
-    public ModelAndView registerUser() {
-        ModelAndView mv = new ModelAndView("registerUser");
-        return mv;
-    }
-
-    @RequestMapping(value = "createUser", method = RequestMethod.POST)
-    public ModelAndView createUser(@ModelAttribute User user, BindingResult errors) {
-        user.validateRegisterForm(errors);
-        if (errors.hasErrors()) {
-            return registerUser();
-        }
-        boolean result = user.register();
-        if (result) {
-            return mainMenu();
-        }
-        return registerUser();
-    }
-
-    @RequestMapping(value = "menu", method = RequestMethod.GET)
-    public ModelAndView mainMenu() {
-        ModelAndView mv = new ModelAndView("mainMenu");
-        return mv;
-    }
-
-    @RequestMapping(value = "manager/profile", method = RequestMethod.GET)
-    public ModelAndView profileManager() {
-        ModelAndView mv = new ModelAndView("profileManager");
-        return mv;
-    }
-
-    @RequestMapping(value = "manager/technician", method = RequestMethod.GET)
-    public ModelAndView technicianManager() {
-        ModelAndView mv = new ModelAndView("technicianManager");
-        return mv;
-    }
-
-    @RequestMapping(value = "garage", method = RequestMethod.GET)
-    public ModelAndView garageList() {
-        ModelAndView mv = new ModelAndView("garageList");
-        mv.addObject("garages", Garage.findAll());
-        return mv;
-    }
-
-    @RequestMapping(value = "garage/{altKeyGarage}", method = RequestMethod.GET)
-    public ModelAndView garageDetail(@PathVariable String altKeyGarage) {
-        ModelAndView mv = new ModelAndView("garage");
-        mv.addObject("garage", Garage.findByAltKey(altKeyGarage));
-        return mv;
-    }
-
-    @RequestMapping(value = "order", method = RequestMethod.GET)
-    public ModelAndView saleOrderList() {
-        ModelAndView mv = new ModelAndView("saleOrderList");
-//        mv.addObject("salesOrder", SaleOrder.dummyList());
-        mv.addObject("salesOrder", SaleOrder.findAll());
-        return mv;
-    }
-
-    @RequestMapping(value = "order/{altKeyOrder}", method = RequestMethod.GET)
-    public ModelAndView saleOrderDetail(@PathVariable String altKeyOrder) {
-        ModelAndView mv = new ModelAndView("saleOrder");
-//        mv.addObject("saleOrder", SaleOrder.dummy());
-        mv.addObject("saleOrder", SaleOrder.findByAltKey(altKeyOrder));
-        return mv;
-    }
-
-    @RequestMapping(value = "technician", method = RequestMethod.GET)
-    public ModelAndView technicianList() {
-        ModelAndView mv = new ModelAndView("technicianList");
-        mv.addObject("technicians", Technician.findAll());
-        return mv;
-    }
-
-    @RequestMapping(value = "parking", method = RequestMethod.GET)
-    public ModelAndView parkingInfo() {
-        ModelAndView mv = new ModelAndView("parkingInfo");
-        return mv;
-    }
+    //</editor-fold>
 }

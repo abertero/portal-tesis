@@ -94,7 +94,7 @@ public class User extends BaseEntity {
     //</editor-fold>
 
     //<editor-fold desc="Methods">
-    public boolean register() {
+    public boolean save() {
         try {
             JPA.em().persist(this);
             return true;
@@ -104,7 +104,7 @@ public class User extends BaseEntity {
         return false;
     }
 
-    public void validateRegisterForm(BindingResult errors) {
+    public void validateUserForm(BindingResult errors) {
 
     }
     //</editor-fold>
