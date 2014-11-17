@@ -9,7 +9,6 @@
 <form action="${ctx}/login" method="post">
     <input type="text" name="username" id="username" placeholder="Username">
     <input type="password" name="password" id="password" placeholder="Password">
-    <input type="submit" name="login" class="login login-submit" value="login">
     <input type="submit" name="login" class="login login-submit" value="<spring:message code="login.submit"/>"/>
 </form>
 
