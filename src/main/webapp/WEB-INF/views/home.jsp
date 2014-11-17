@@ -7,19 +7,10 @@
 <p><spring:message code="login.detail"/></p>
 
 <form action="${ctx}/login" method="post">
-  <div>
-    <div>
-      <label for="username"><spring:message code="login.username"/></label>
-
-      <div><input type="text" name="username" id="username" value=""/></div>
-    </div>
-    <div>
-      <label for="password"><spring:message code="login.password"/></label>
-
-      <div><input type="password" name="password" id="password" value=""/></div>
-    </div>
-  </div>
-  <input type="submit" value="<spring:message code="login.submit"/>"/>
+    <input type="text" name="username" id="username" placeholder="Username">
+    <input type="password" name="password" id="password" placeholder="Password">
+    <input type="submit" name="login" class="login login-submit" value="login">
+    <input type="submit" name="login" class="login login-submit" value="<spring:message code="login.submit"/>"/>
 </form>
 
 <p><spring:message code="login.register.message"/> <a href="${ctx}/register"><spring:message

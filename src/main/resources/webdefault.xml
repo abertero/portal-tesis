@@ -299,6 +299,7 @@
     <url-pattern>*.JSPF</url-pattern>
     <url-pattern>*.JSPX</url-pattern>
     <url-pattern>*.XSP</url-pattern>
+    <url-pattern>*.css</url-pattern>
   </servlet-mapping>
 
   <!-- ==================================================================== -->

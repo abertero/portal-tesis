@@ -11,16 +11,17 @@
       Requires Spring Framework 3.0 or higher.
   -->
   <mvc:resources mapping="/static/**" location="/static/"/>
+  <mvc:resources mapping="/resources/**" location="/resources/theme/" />
+  <mvc:annotation-driven />
+        <!--
+            Ensures that dispatcher servlet can be mapped to '/' and static resources
+            are still served by the containers default servlet. Requires Spring Framework
+            3.0 or higher.
+        -->
+<mvc:default-servlet-handler/>
 
-  <!--
-      Ensures that dispatcher servlet can be mapped to '/' and static resources
-      are still served by the containers default servlet. Requires Spring Framework
-      3.0 or higher.
-  -->
-  <mvc:default-servlet-handler/>
-
-  <!--
-      Configures Spring Data JPA and sets the base package of my DAOs.
-  -->
-  <jpa:repositories base-package="portal.model"/>
-</beans>
+        <!--
+            Configures Spring Data JPA and sets the base package of my DAOs.
+        -->
+<jpa:repositories base-package="portal.model"/>
+        </beans>
