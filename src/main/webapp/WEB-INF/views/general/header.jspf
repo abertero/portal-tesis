@@ -1,5 +1,5 @@
 <head>
   <title><spring:message code="application.title"/>*</title>
-  <link rel='stylesheet' href='${ctx}/resources/theme/css/jquery-ui.css'>
-  <link rel="stylesheet" href="${ctx}/resources/theme/css/style.css" media="screen" type="text/css" />
+  <link rel='stylesheet' href='${ctx}/static/css/jquery-ui.css'>
+  <link rel="stylesheet" href="${ctx}/static/css/style.css" media="screen" type="text/css" />
 </head>
