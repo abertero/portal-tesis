@@ -38,7 +38,7 @@ public class ApplicationController {
     }
 
     @RequestMapping(value = "user/{altKeyUser}", method = RequestMethod.GET)
-    public ModelAndView userDetail(@PathVariable String altKeyUser, @RequestParam Boolean canEdit) {
+    public ModelAndView userDetail(@PathVariable String altKeyUser, @RequestParam(required = false, defaultValue = "false") Boolean canEdit) {
         return doUser(User.findByAltKey(altKeyUser), canEdit != null && canEdit);
     }
 
@@ -50,7 +50,7 @@ public class ApplicationController {
     }
 
     @RequestMapping(value = "manager/technician/{altKeyTechnician}", method = RequestMethod.GET)
-    public ModelAndView technicianDetail(@PathVariable String altKeyTechnician, @RequestParam Boolean canEdit) {
+    public ModelAndView technicianDetail(@PathVariable String altKeyTechnician, @RequestParam(required = false, defaultValue = "false") Boolean canEdit) {
         return doTechnician(Technician.findByAltKey(altKeyTechnician), canEdit != null && canEdit);
     }
 
@@ -62,7 +62,7 @@ public class ApplicationController {
     }
 
     @RequestMapping(value = "garage/{altKeyGarage}", method = RequestMethod.GET)
-    public ModelAndView garageDetail(@PathVariable String altKeyGarage, @RequestParam Boolean canEdit) {
+    public ModelAndView garageDetail(@PathVariable String altKeyGarage, @RequestParam(required = false, defaultValue = "false") Boolean canEdit) {
         return doGarage(Garage.findByAltKey(altKeyGarage), canEdit);
     }
 
@@ -74,7 +74,7 @@ public class ApplicationController {
     }
 
     @RequestMapping(value = "order/{altKeyOrder}", method = RequestMethod.GET)
-    public ModelAndView saleOrderDetail(@PathVariable String altKeyOrder, @RequestParam Boolean canEdit) {
+    public ModelAndView saleOrderDetail(@PathVariable String altKeyOrder, @RequestParam(required = false, defaultValue = "false") Boolean canEdit) {
         return doSaleOrder(SaleOrder.findByAltKey(altKeyOrder), canEdit);
     }
 

@@ -7,12 +7,14 @@ import portal.config.JPA;
 import portal.model.base.BaseEntity;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.util.Date;
 import java.util.List;
 
 @Entity
+@Table(name = "user_table")
 public class User extends BaseEntity {
     private static final Logger logger = LoggerFactory.getLogger(User.class);
 
