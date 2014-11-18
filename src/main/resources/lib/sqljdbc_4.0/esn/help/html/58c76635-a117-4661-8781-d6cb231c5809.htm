@@ -1,0 +1,103 @@
+﻿<html xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:mshelp="http://msdn.microsoft.com/mshelp" xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:msxsl="urn:schemas-microsoft-com:xslt"><head><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" /><META NAME="save" CONTENT="history" /><title>Leer datos grandes con un ejemplo de procedimientos almacenados</title><meta name="Language" content="es-es" /><meta name="System.Keywords" content="ejemplos de almacenamiento en búfer adaptable, usar el almacenamiento en búfer adaptable" /><meta name="System.Keywords" content="almacenamiento en búfer adaptable, OUT, parámetros en" /><meta name="System.Keywords" content="OUT, parámetros del almacenamiento en búfer adaptable" /><meta name="Microsoft.Help.Id" content="58c76635-a117-4661-8781-d6cb231c5809" /><meta name="Description" content="En esta aplicación de ejemplo del Controlador Microsoft JDBC para SQL Server se muestra cómo recuperar un parámetro OUT grande desde un procedimiento almacenado." /><meta name="Microsoft.Help.ContentType" content="Samples" /><link rel="stylesheet" type="text/css" href="../local/Classic.css" /><script type="text/javascript" src="../scripts/EventUtilities.js">&amp;nbsp;</script><script type="text/javascript" src="../scripts/SplitScreen.js">&amp;nbsp;</script><script type="text/javascript" src="../scripts/Dropdown.js">&amp;nbsp;</script><script type="text/javascript" src="../scripts/script_manifold.js">&amp;nbsp;</script><script type="text/javascript" src="../scripts/script_feedBack.js">&amp;nbsp;</script><script type="text/javascript" src="../scripts/CheckboxMenu.js">&amp;nbsp;</script><script type="text/javascript" src="../scripts/CommonUtilities.js">&amp;nbsp;</script><script type="text/javascript" src="../local/script_main.js">&amp;nbsp;</script></head><body><div id="header"><table id="bottomTable" cellpadding="0" cellspacing="0"><tr><td align="left"><span id="headerBold">Leer datos grandes con un ejemplo de procedimientos almacenados</span></td></tr></table><table id="gradientTable"><tr><td class="nsrBottom" background="../icons/gradient.gif" /></tr></table></div><div id="mainSection"><div id="mainBody"><div class="introduction"><p>En esta aplicación de ejemplo del Controlador Microsoft JDBC para SQL Server se muestra cómo recuperar un parámetro OUT grande desde un procedimiento almacenado.</p><p>El archivo de código para este ejemplo se denomina executeStoredProcedure.java y se encuentra en la siguiente ubicación:</p><p>&lt;<i>directorio de instalación</i>&gt;\sqljdbc_&lt;<i>versión</i>&gt;\&lt;<i>idioma</i>&gt;\help\samples\adaptive</p></div><h1 class="heading">Requisitos</h1><div id="requirementsTitleSection" class="section" name="collapseableSection" style=""><p>Para ejecutar esta aplicación de ejemplo, deberá tener acceso a la base de datos de ejemplo SQL Server 2005 AdventureWorks. También deberá establecer la ruta de clase para incluir el archivo sqljdbc.jar o el archivo sqljdbc4.jar. Si en la ruta de clase falta una entrada para sqljdbc.jar o sqljdbc4.jar, la aplicación de ejemplo produce la excepción común "Clase no encontrada". Para obtener más información acerca de cómo establecer la ruta de clase (classpath), vea <span sdata="link"><a href="6faaf05b-8b70-4ed2-9b44-eee5897f1cd0.htm">Usar el controlador JDBC</a></span>.</p><div style="margin: .5em 1.5em .5em 1.5em"><b></b><p>El Controlador Microsoft JDBC para SQL Server proporciona los archivos de biblioteca de clases sqljdbc.jar y sqljdbc4.jar que hay que usar dependiendo de su configuración preferida de Java Runtime Environment (JRE). Para obtener más información acerca del archivo JAR que hay que elegir, vea <span sdata="link"><a href="447792bb-f39b-49b4-9fd0-1ef4154c74ab.htm">Requisitos del sistema para el controlador JDBC</a></span>.</p></div><p>También debe crear el procedimiento almacenado siguiente en la base de datos de ejemplo SQL Server 2005AdventureWorks:</p><div class="sampleCode"><span codeLanguage="other"><pre>CREATE PROCEDURE GetLargeDataValue 
+  (@Document_ID int, 
+   @Document_ID_out int OUTPUT, 
+   @Document_Title varchar(50) OUTPUT,
+   @Document_Summary nvarchar(max) OUTPUT)
+
+AS 
+BEGIN  
+   SELECT @Document_ID_out = DocumentID, 
+          @Document_Title = Title,
+          @Document_Summary = DocumentSummary 
+    FROM  Production.Document
+    WHERE DocumentID = @Document_ID
+END</pre></span></div></div><h1 class="heading">Ejemplo</h1><div id="exampleSection" class="section" name="collapseableSection" style=""><p>En el siguiente ejemplo, el código muestra realiza una conexión a la base de datos SQL Server 2005 AdventureWorks. Luego, el código muestra crea los datos del ejemplo y actualiza la tabla Production.Document con una consulta con parámetros. A continuación, el código muestra establece el modo de almacenamiento en búfer adaptable con el método <a href="a9a9ffdd-7ce3-4e0a-907c-34d6a54e6865.htm">getResponseBuffering</a> de la clase <a href="ec24963c-8b51-4838-91e9-1fbfa2347451.htm">SQLServerStatement</a> y ejecuta el procedimiento almacenado GetLargeDataValue. Tenga en cuenta que desde la publicación de la versión 2.0 del controlador JDBC, la propiedad de conexión responseBuffering se establece en "adaptive" de manera predeterminada.</p><p>Finalmente, el código muestra los datos devueltos con los parámetros OUT y cómo utilizar los métodos <span class="code">mark</span> y <span class="code">reset</span> en el flujo para volver a leer cualquier parte de los datos. </p><div name="snippetGroup"><div class="sampleCode"><span codeLanguage="Java"><pre>import java.sql.*;
+import java.io.*;
+import com.microsoft.sqlserver.jdbc.SQLServerCallableStatement;
+
+public class executeStoredProcedure {
+
+    public static void main(String[] args) {
+        // Create a variable for the connection string.
+        String connectionUrl = 
+           "jdbc:sqlserver://localhost:1433;" +
+           "databaseName=AdventureWorks;integratedSecurity=true;";
+
+        // Declare the JDBC objects.
+        Connection con = null;
+        Statement stmt = null;
+        ResultSet rs = null;  
+
+        try {
+          // Establish the connection.
+          Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+          con = DriverManager.getConnection(connectionUrl);
+
+          // Create test data as an example.
+          StringBuffer buffer = new StringBuffer(4000);
+          for (int i = 0; i &lt; 4000; i++) 
+             buffer.append( (char) ('A'));
+
+          PreparedStatement pstmt = con.prepareStatement(
+               "UPDATE Production.Document " +
+               "SET DocumentSummary = ? WHERE (DocumentID = 1)");
+
+          pstmt.setString(1, buffer.toString());
+          pstmt.executeUpdate();
+          pstmt.close();
+
+          // Query test data by using a stored procedure.
+          CallableStatement cstmt = 
+             con.prepareCall("{call dbo.GetLargeDataValue(?, ?, ?, ?)}");
+
+          cstmt.setInt(1, 1);
+          cstmt.registerOutParameter(2, java.sql.Types.INTEGER);
+          cstmt.registerOutParameter(3, java.sql.Types.CHAR);
+          cstmt.registerOutParameter(4, java.sql.Types.LONGVARCHAR);
+
+          // Display the response buffering mode.
+          SQLServerCallableStatement SQLcstmt = (SQLServerCallableStatement) cstmt;
+          System.out.println("Response buffering mode is: " +
+               SQLcstmt.getResponseBuffering());
+
+          SQLcstmt.execute();
+          System.out.println("DocumentID: " + cstmt.getInt(2));
+          System.out.println("Document_Title: " + cstmt.getString(3));
+
+          Reader reader = SQLcstmt.getCharacterStream(4);
+
+          // If your application needs to re-read any portion of the value, 
+          // it must call the mark method on the InputStream or Reader to 
+          // start buffering data that is to be re-read after a subsequent
+          // call to the reset method.	  	 	  
+          reader.mark(4000);
+
+          // Read the first half of data.
+          char output1[] = new char[2000];
+          reader.read(output1);
+          String stringOutput1 = new String(output1);
+
+          // Reset the stream.
+          reader.reset();
+
+          // Read all the data.
+          char output2[] = new char[4000];
+          reader.read(output2);
+          String stringOutput2 = new String(output2);
+
+          // Close the stream.
+          reader.close();
+      }
+      // Handle any errors that may have occurred.
+      catch (Exception e) {
+          e.printStackTrace();
+      }
+      finally {
+          if (rs != null) try { rs.close(); } catch(Exception e) {}
+          if (stmt != null) try { stmt.close(); } catch(Exception e) {}
+          if (con != null) try { con.close(); } catch(Exception e) {}
+      }
+   }
+}
+
+</pre></span></div></div></div><span id="seeAlsoSpan"><h1 class="heading">Vea también</h1></span><div id="seeAlsoSection" class="section" name="collapseableSection" style=""><div class="seeAlsoStyle"><span sdata="link"><a href="5b93569f-eceb-4f05-b49c-067564cd3c85.htm">Trabajar con datos grandes</a></span></div></div></div><div id="footer" class="section"><span id="feedbackarea">Enviar <a href="javascript:SubmitFeedback('DevDocs@Microsoft.com','','','','8.0.12060.10000','%0\dLe%20agradecemos%20sus%20comentarios.%20Los%20equipos%20de%20desarrolladores%20usan%20estos%20comentarios%20para%20mejorar%20la%20documentación.%20Mientras%20revisamos%20los%20comentarios,%20es%20posible%20que%20le%20enviemos%20un%20correo%20electrónico%20para%20solicitarle%20alguna%20aclaración%20o%20comentarios%20sobre%20una%20posible%20solución.%20No%20usamos%20su%20dirección%20de%20correo%20electrónico%20para%20ningún%20otro%20propósito%20y%20ésta%20se%20borra%20una%20vez%20finalizada%20la%20revisió.%0\APara%20obtener%20más%20información%20acerca%20de%20las%20directivas%20de%20privacidad%20de%20Microsoft,%20vea%20http://privacy.microsoft.com/es-es/default.aspx.%0\A%0\d','Comentarios%20del cliente');">comentarios de </a> acerca de este tema Microsoft.</span><span id="copyrightarea"><p><a href="9bad553b-9e70-4696-8499-2e35f772a1e0.htm">© 2012 Microsoft. Todos los derechos reservados.</a></p></span></div></div></body></html>

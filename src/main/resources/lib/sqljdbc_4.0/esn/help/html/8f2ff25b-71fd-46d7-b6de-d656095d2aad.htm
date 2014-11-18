@@ -1,0 +1,251 @@
+﻿<html xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:mshelp="http://msdn.microsoft.com/mshelp" xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:msxsl="urn:schemas-microsoft-com:xslt"><head><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" /><META NAME="save" CONTENT="history" /><title>Ejemplos de tipos de datos SQLXML</title><meta name="Language" content="es-es" /><meta name="System.Keywords" content="ejemplos de tipos de datos SQLXML" /><meta name="Microsoft.Help.Id" content="8f2ff25b-71fd-46d7-b6de-d656095d2aad" /><meta name="Description" content="En esta aplicación de ejemplo del Controlador Microsoft JDBC para SQL Server se muestra cómo almacenar datos XML en una base de datos relacional, cómo recuperar datos XML desde una base de datos y cómo analizar datos XML con el tipo de datos SQLXML de Java" /><meta name="Microsoft.Help.ContentType" content="Samples" /><link rel="stylesheet" type="text/css" href="../local/Classic.css" /><script type="text/javascript" src="../scripts/EventUtilities.js">&amp;nbsp;</script><script type="text/javascript" src="../scripts/SplitScreen.js">&amp;nbsp;</script><script type="text/javascript" src="../scripts/Dropdown.js">&amp;nbsp;</script><script type="text/javascript" src="../scripts/script_manifold.js">&amp;nbsp;</script><script type="text/javascript" src="../scripts/script_feedBack.js">&amp;nbsp;</script><script type="text/javascript" src="../scripts/CheckboxMenu.js">&amp;nbsp;</script><script type="text/javascript" src="../scripts/CommonUtilities.js">&amp;nbsp;</script><script type="text/javascript" src="../local/script_main.js">&amp;nbsp;</script></head><body><div id="header"><table id="bottomTable" cellpadding="0" cellspacing="0"><tr><td align="left"><span id="headerBold">Ejemplos de tipos de datos SQLXML</span></td></tr></table><table id="gradientTable"><tr><td class="nsrBottom" background="../icons/gradient.gif" /></tr></table></div><div id="mainSection"><div id="mainBody"><div class="introduction"><p>En esta aplicación de ejemplo del Controlador Microsoft JDBC para SQL Server se muestra cómo almacenar datos XML en una base de datos relacional, cómo recuperar datos XML desde una base de datos y cómo analizar datos XML con el tipo de datos <span sdata="langKeyword" value="SQLXML"><span class="keyword">SQLXML</span></span> de Java.</p><p>Los ejemplos de código de esta sección usan un analizador Simple API for XML (SAX). SAX es un estándar desarrollado públicamente para el análisis basado en eventos de documentos XML. También proporciona una interfaz de programación de aplicaciones para trabajar con datos XML. Tenga en cuenta que las aplicaciones también pueden usar cualquier otro analizador XML, como Document Object Model (DOM), Streaming API for XML (StAX) o cualquier otro.  </p><p>Document Object Model (DOM) proporciona una representación programática de documentos, fragmentos, nodos y conjuntos de nodos XML. También proporciona una interfaz de programación de aplicaciones para trabajar con datos XML. Similarmente, Streaming API for XML (StAX) es una API basada en Java para análisis por extracciones de XML.</p><div style="margin: .5em 1.5em .5em 1.5em"><b></b><p>Para usar la API del analizador SAX, debe importar la implementación SAX estándar desde el paquete javax.xml.</p></div><p>El archivo de código para este ejemplo se llama sqlxmlExample.java y se encuentra en la siguiente ubicación:</p><p>&lt;<i>directorio de instalación</i>&gt;\sqljdbc_&lt;<i>versión</i>&gt;\&lt;<i>idioma</i>&gt;\help\samples\datatypes</p></div><h1 class="heading">Requisitos</h1><div id="requirementsTitleSection" class="section" name="collapseableSection" style=""><p>Para ejecutar esta aplicación de ejemplo, debe configurar la ruta de clase para que incluya el archivo sqljdbc4.jar. Si en la ruta de clase falta una entrada para sqljdbc4.jar, la aplicación de ejemplo genera la excepción común "Clase no encontrada". Para obtener más información acerca de cómo establecer la ruta de clase, consulte <span sdata="link"><a href="6faaf05b-8b70-4ed2-9b44-eee5897f1cd0.htm">Usar el controlador JDBC</a></span>.</p><p>Además, necesitará acceso a la base de datos de ejemplo SQL Server 2005 AdventureWorks para ejecutar esta aplicación de ejemplo.</p></div><h1 class="heading">Ejemplo</h1><div id="exampleSection" class="section" name="collapseableSection" style=""><p>En el ejemplo siguiente, el código hace una conexión con la base de datos SQL Server 2005 AdventureWorks y, después, invoca al método createSampleTables. </p><p>El método createSampleTables quita las tablas de prueba, TestTable1 y TestTable2, si existen. Después, inserta dos filas en TestTable1. </p><p>Además, el código muestra incluye los tres métodos siguientes y una clase adicional, llamada ExampleContentHandler. </p><p>La clase ExampleContentHandler implementa un controlador de contenido personalizado, que define los métodos  para los eventos del analizador.</p><p>El método showGetters muestra cómo analizar los datos en el objeto SQLXML utilizando SAX, ContentHandler y XMLReader. Primero, el ejemplo de código crea una instancia de un controlador de contenido personalizado, que es ExampleContentHandler. Después, crea y ejecuta una instrucción SQL que devuelve un conjunto de datos desde TestTable1. Después, el ejemplo de código obtiene un analizador SAX y analiza los datos XML.</p><p>El método showSetters muestra cómo establecer la columna <span sdata="langKeyword" value="xml"><span class="keyword">xml</span></span> utilizando SAX, ContentHandler y ResultSet. Primero, crea un objeto SQLXML vacío utilizando el método <a href="cf5bfcdd-bc03-4c5b-b554-d8a8a4067e93.htm">createSQLXML</a> de la clase Connection. Después, obtiene una instancia de un controlador de contenido para escribir los datos en el objeto SQLXML. Después, el ejemplo de código escribe los datos en TestTable1. Finalmente, el código muestra recorre en iteración las filas de datos contenidas en el conjunto de resultados y utiliza el método <a href="a07e0f30-cbc6-4ad7-b931-c30cad382e64.htm">getSQLXML</a> para leer los datos XML.</p><p>El método showTransformer muestra cómo obtener un dato XML desde una tabla e insertarlo en otra utilizando SAX y Transformer. Primero, recupera el objeto SQLXML de origen desde TestTable1. Después, crea un objeto SQLXML de destino vacío utilizando el método <a href="cf5bfcdd-bc03-4c5b-b554-d8a8a4067e93.htm">createSQLXML</a> de la clase Connection. Después, actualiza el objeto SQLXML de destino y escribe los datos XML en TestTable2. Finalmente, el código muestra recorre en iteración las filas de datos contenidas en el conjunto de resultados y utiliza el método <a href="a07e0f30-cbc6-4ad7-b931-c30cad382e64.htm">getSQLXML</a> para leer los datos XML de TestTable2.</p><div name="snippetGroup"><div class="sampleCode"><span codeLanguage="Java"><pre>import java.sql.*;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+
+import javax.xml.transform.sax.SAXSource;
+import javax.xml.transform.sax.SAXResult;
+import javax.xml.transform.sax.SAXTransformerFactory;
+
+import org.xml.sax.*;
+
+public class sqlxmlExample {
+
+   public static void main(String[] args) {
+	   
+      // Create a variable for the connection string.
+      String connectionUrl = "jdbc:sqlserver://localhost:1433;" +
+            "databaseName=AdventureWorks;integratedSecurity=true;";
+
+      // Declare the JDBC objects.
+      Connection con = null;
+      Statement stmt = null;
+      ResultSet rs = null;
+
+      try {
+         // Establish the connection.
+         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+         con = DriverManager.getConnection(connectionUrl);
+
+         // Create initial sample data.
+         createSampleTables(con);
+
+         // The showGetters method demonstrates how to parse the data in the 
+         // SQLXML object by using the SAX, ContentHandler and XMLReader.  
+         showGetters(con);            
+
+         // The showSetters method demonstrates how to set the xml column 
+         // by using the SAX, ContentHandler, and ResultSet.
+         showSetters(con);   
+
+         // The showTransformer method demonstrates how to get an XML data 
+         // from one table and insert that XML data to another table 
+         // by using the SAX and the Transformer. 
+         showTransformer(con);        
+      }
+      // Handle any errors that may have occurred.
+      catch (Exception e) {
+         e.printStackTrace();
+      }
+      finally {
+         if (rs != null) try { rs.close(); } catch(Exception e) {}
+         if (stmt != null) try { stmt.close(); } catch(Exception e) {}
+         if (con != null) try { con.close(); } catch(Exception e) {}
+      }
+   }
+
+   private static void showGetters(Connection con) {
+	   
+      try {
+          // Create an instance of the custom content handler.   
+          ExampleContentHandler myHandler = new ExampleContentHandler();
+		   
+          // Create and execute an SQL statement that returns a
+          // set of data.       
+          String SQL = "SELECT * FROM TestTable1";
+          Statement stmt = con.createStatement();
+          ResultSet rs = stmt.executeQuery(SQL);
+
+          rs.next();
+
+          SQLXML xmlSource = rs.getSQLXML("Col3");
+
+          // Send SAX events to the custom content handler.
+          SAXSource sxSource =  xmlSource.getSource(SAXSource.class);
+          XMLReader xmlReader = sxSource.getXMLReader();
+          xmlReader.setContentHandler(myHandler);
+
+	      System.out.println("showGetters method: Parse an XML data in TestTable1 =&gt; ");
+          xmlReader.parse(sxSource.getInputSource());
+
+      } catch (Exception e) {
+          e.printStackTrace();
+      }
+   }
+
+   private static void showSetters(Connection con) {
+
+      try {
+         // Create and execute an SQL statement, retrieving an updatable result set.
+         String SQL = "SELECT * FROM TestTable1;";
+         Statement stmt = con.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE);
+         ResultSet rs = stmt.executeQuery(SQL);
+		   
+         // Create an empty SQLXML object.
+         SQLXML sqlxml = con.createSQLXML();
+
+         // Set the result value from SAX events.
+         SAXResult sxResult = sqlxml.setResult(SAXResult.class);
+         ContentHandler myHandler = sxResult.getHandler();
+
+         // Set the XML elements and attributes into the result.
+         myHandler.startDocument();
+         myHandler.startElement(null, "contact", "contact", null);
+         myHandler.startElement(null, "name", "name", null);
+         myHandler.endElement(null, "name", "name");
+         myHandler.startElement(null, "phone", "phone", null);
+         myHandler.endElement(null, "phone", "phone");		   
+         myHandler.endElement(null, "contact", "contact");
+         myHandler.endDocument();
+
+         // Update the data in the result set.
+         rs.moveToInsertRow();
+         rs.updateString("Col2", "C");
+         rs.updateSQLXML("Col3", sqlxml);
+         rs.insertRow();
+		   
+         // Display the data. 
+         System.out.println("showSetters method: Display data in TestTable1 =&gt; ");
+         while (rs.next()) {
+           System.out.println(rs.getString("Col1") + " : " + rs.getString("Col2"));
+           SQLXML xml = rs.getSQLXML("Col3");              
+           System.out.println("XML column : " + xml.getString());
+         }
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
+   }
+
+   private static void showTransformer(Connection con) {
+
+      try {
+          // Create and execute an SQL statement that returns a
+          // set of data.       
+          String SQL = "SELECT * FROM TestTable1";
+          Statement stmt = con.createStatement();
+          ResultSet rs = stmt.executeQuery(SQL);
+	       
+          rs.next();
+	        
+          // Get the value of the source SQLXML object from the database.
+          SQLXML xmlSource = rs.getSQLXML("Col3");
+	        
+          // Get a Source to read the XML data. 
+          SAXSource sxSource =  xmlSource.getSource(SAXSource.class);
+	        
+         // Create a destination SQLXML object without any data.
+         SQLXML xmlDest = con.createSQLXML();
+
+         // Get a Result to write the XML data.
+         SAXResult sxResult = xmlDest.setResult(SAXResult.class);
+	        
+         // Transform the Source to a Result by using the identity transform.
+         SAXTransformerFactory stf = (SAXTransformerFactory) TransformerFactory.newInstance();
+         Transformer identity = stf.newTransformer();
+         identity.transform(sxSource, sxResult);
+
+         // Insert the destination SQLXML object into the database.
+         PreparedStatement psmt = 
+           con.prepareStatement(
+              "INSERT INTO TestTable2" + " (Col2, Col3, Col4, Col5) VALUES (?, ?, ?, ?)");
+         psmt.setString(1, "A");
+         psmt.setString(2, "Test data");
+         psmt.setInt(3, 123);
+         psmt.setSQLXML(4, xmlDest);
+         psmt.execute();
+	        
+         // Execute the query and display the data.	
+         SQL = "SELECT * FROM TestTable2";
+         stmt = con.createStatement();
+         rs = stmt.executeQuery(SQL);
+
+         System.out.println("showTransformer method : Display data in TestTable2 =&gt; ");
+         while (rs.next()) {
+            System.out.println(rs.getString("Col1") + " : " + rs.getString("Col2"));
+            System.out.println(rs.getString("Col3") + " : " + rs.getInt("Col4"));
+	          
+            SQLXML xml = rs.getSQLXML("Col5");              
+            System.out.println("XML column : " + xml.getString());
+         }
+     } catch (Exception e) {
+        e.printStackTrace();
+     }
+   }
+
+   private static void createSampleTables(Connection con) {
+
+      try {
+	  Statement stmt = con.createStatement();
+		  
+          // Drop the tables.
+	  stmt.executeUpdate("if exists (select * from sys.objects where name = 'TestTable1')" +
+                "drop table TestTable1" );
+
+          stmt.executeUpdate("if exists (select * from sys.objects where name = 'TestTable2')" +
+                "drop table TestTable2" );		  
+
+          // Create empty tables.
+          stmt.execute("CREATE TABLE TestTable1 (Col1 int IDENTITY, Col2 char, Col3 xml)");
+          stmt.execute("CREATE TABLE TestTable2 (Col1 int IDENTITY, Col2 char, Col3 varchar(50), Col4 int, Col5 xml)");
+
+          // Insert two rows to the TestTable1.
+         String row1 = "&lt;contact&gt;&lt;name&gt;Contact Name 1&lt;/name&gt;&lt;phone&gt;XXX-XXX-XXXX&lt;/phone&gt;&lt;/contact&gt;";
+         String row2 = "&lt;contact&gt;&lt;name&gt;Contact Name 2&lt;/name&gt;&lt;phone&gt;YYY-YYY-YYYY&lt;/phone&gt;&lt;/contact&gt;";
+
+         stmt.executeUpdate("insert into TestTable1" + " (Col2, Col3) values('A', '" + row1 +"')");
+         stmt.executeUpdate("insert into TestTable1" + " (Col2, Col3) values('B', '" + row2 +"')");
+	      
+       } catch (Exception e) {
+          e.printStackTrace();
+       }
+   }
+}
+
+class ExampleContentHandler implements ContentHandler {
+
+  public void startElement(String namespaceURI, String localName, String qName, Attributes atts) 
+  throws SAXException {
+	  System.out.println("startElement method: localName =&gt; " + localName);
+  }
+  public void characters(char[] text, int start, int length) throws SAXException {
+  	  System.out.println("characters method");  
+  }
+  public void endElement(String namespaceURI, String localName, String qName) throws SAXException {
+      System.out.println("endElement method: localName =&gt; " + localName);		  
+  } 
+  public void setDocumentLocator(Locator locator) {
+	  System.out.println("setDocumentLocator method");
+  }
+  public void startDocument() throws SAXException {
+	  System.out.println("startDocument method");
+  }
+  public void endDocument() throws SAXException {
+	  System.out.println("endDocument method");
+  }
+  public void startPrefixMapping(String prefix, String uri) throws SAXException {
+	  System.out.println("startPrefixMapping method: prefix =&gt; " + prefix);
+  }
+  public void endPrefixMapping(String prefix) throws SAXException {
+	  System.out.println("endPrefixMapping method: prefix =&gt; " + prefix);
+  }
+  public void skippedEntity(String name) throws SAXException {
+	  System.out.println("skippedEntity method: name =&gt; " + name);
+  }  
+  public void ignorableWhitespace(char[] text, int start, int length) throws SAXException {
+	  System.out.println("ignorableWhiteSpace method");
+  }
+  public void processingInstruction(String target, String data) throws SAXException {
+	  System.out.println("processingInstruction method: target =&gt; " + target);
+  }
+}
+
+</pre></span></div></div></div><span id="seeAlsoSpan"><h1 class="heading">Vea también</h1></span><div id="seeAlsoSection" class="section" name="collapseableSection" style=""><div class="seeAlsoStyle"><span sdata="link"><a href="b39f44d0-3710-4bc6-880c-35bd8c10a734.htm">Trabajar con tipos de datos (JDBC)</a></span></div></div></div><div id="footer" class="section"><span id="feedbackarea">Enviar <a href="javascript:SubmitFeedback('DevDocs@Microsoft.com','','','','8.0.12060.10000','%0\dLe%20agradecemos%20sus%20comentarios.%20Los%20equipos%20de%20desarrolladores%20usan%20estos%20comentarios%20para%20mejorar%20la%20documentación.%20Mientras%20revisamos%20los%20comentarios,%20es%20posible%20que%20le%20enviemos%20un%20correo%20electrónico%20para%20solicitarle%20alguna%20aclaración%20o%20comentarios%20sobre%20una%20posible%20solución.%20No%20usamos%20su%20dirección%20de%20correo%20electrónico%20para%20ningún%20otro%20propósito%20y%20ésta%20se%20borra%20una%20vez%20finalizada%20la%20revisió.%0\APara%20obtener%20más%20información%20acerca%20de%20las%20directivas%20de%20privacidad%20de%20Microsoft,%20vea%20http://privacy.microsoft.com/es-es/default.aspx.%0\A%0\d','Comentarios%20del cliente');">comentarios de </a> acerca de este tema Microsoft.</span><span id="copyrightarea"><p><a href="9bad553b-9e70-4696-8499-2e35f772a1e0.htm">© 2012 Microsoft. Todos los derechos reservados.</a></p></span></div></div></body></html>

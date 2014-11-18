@@ -1,0 +1,96 @@
+﻿<html xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:MSHelp="http://msdn.microsoft.com/mshelp" xmlns:mshelp="http://msdn.microsoft.com/mshelp" xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:msxsl="urn:schemas-microsoft-com:xslt"><head><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8" /><META NAME="save" CONTENT="history" /><title>Almacenar en caché ejemplos de datos de conjunto de resultados</title><meta name="Language" content="es-es" /><meta name="System.Keywords" content="almacenar en caché ejemplos de datos de conjunto de resultados" /><meta name="Microsoft.Help.Id" content="13a95ebb-996c-4713-a1bd-5834fe22a334" /><meta name="Description" content="Esta aplicación de ejemplo del Controlador Microsoft JDBC para SQL Server muestra cómo recuperar un conjunto de resultados grande de una base de datos y, a continuación, cómo controlar el número de filas de datos almacenadas en la memoria caché del cliente" /><meta name="Microsoft.Help.ContentType" content="Samples" /><link rel="stylesheet" type="text/css" href="../local/Classic.css" /><script type="text/javascript" src="../scripts/EventUtilities.js">&amp;nbsp;</script><script type="text/javascript" src="../scripts/SplitScreen.js">&amp;nbsp;</script><script type="text/javascript" src="../scripts/Dropdown.js">&amp;nbsp;</script><script type="text/javascript" src="../scripts/script_manifold.js">&amp;nbsp;</script><script type="text/javascript" src="../scripts/script_feedBack.js">&amp;nbsp;</script><script type="text/javascript" src="../scripts/CheckboxMenu.js">&amp;nbsp;</script><script type="text/javascript" src="../scripts/CommonUtilities.js">&amp;nbsp;</script><script type="text/javascript" src="../local/script_main.js">&amp;nbsp;</script></head><body><div id="header"><table id="bottomTable" cellpadding="0" cellspacing="0"><tr><td align="left"><span id="headerBold">Almacenar en caché ejemplos de datos de conjunto de resultados</span></td></tr></table><table id="gradientTable"><tr><td class="nsrBottom" background="../icons/gradient.gif" /></tr></table></div><div id="mainSection"><div id="mainBody"><div class="introduction"><p>Esta aplicación de ejemplo del Controlador Microsoft JDBC para SQL Server muestra cómo recuperar un conjunto de resultados grande de una base de datos y, a continuación, cómo controlar el número de filas de datos almacenadas en la memoria caché del cliente con el método <a href="233bf4f8-4758-42d0-a80b-33e34fa78027.htm">setFetchSize</a> del objeto <a href="eaffcff1-286c-459f-83da-3150778480c9.htm">SQLServerResultSet</a>.</p><div style="margin: .5em 1.5em .5em 1.5em"><b></b><p>La limitación del número de filas almacenadas en la memoria caché del cliente es distinta de la limitación del número total de filas que contiene el conjunto de resultados. Para controlar el número total de filas que contiene un conjunto de resultados, use el método <a href="cccc0667-589b-4655-8ea8-14ae8b2eb9dc.htm">setMaxRows</a> del objeto <a href="ec24963c-8b51-4838-91e9-1fbfa2347451.htm">SQLServerStatement</a>, heredado por los objetos <a href="a8481c06-fbba-432b-8c69-4f4619c20ad4.htm">SQLServerPreparedStatement</a> y <a href="30710a63-c05d-47d9-9cf9-c087a1c76373.htm">SQLServerCallableStatement</a>.</p></div><p>Para establecer el límite del número de filas almacenadas en la memoria caché del cliente, primero debe usar un cursor de servidor para crear uno de los objetos <b>Statement</b> mediante la especificación del tipo de cursor que se va a usar al crear el objeto <b>Statement</b>. Por ejemplo, el controlador JDBC proporciona el tipo de cursor TYPE_SS_SERVER_CURSOR_FORWARD_ONLY, que es un cursor de servidor de solo avance rápido y solo lectura para su uso con las bases de datos de SQL Server.</p><div style="margin: .5em 1.5em .5em 1.5em"><b></b><p>Una alternativa al tipo de cursor específico de SQL Server es usar la propiedad de cadena de conexión selectMethod y establecer su valor en "cursor". Para obtener más información sobre los tipos de cursor compatibles con el controlador JDBC, consulte <span sdata="link"><a href="4f4d3db7-4f76-450d-ab63-141237a4f034.htm">Descripción de los tipos de cursor</a></span>.</p></div><p>Una vez ejecutada la consulta contenida en el objeto <b>Statement</b> y devueltos los datos al cliente como un conjunto de resultados, puede llamar al método <b>setFetchSize</b> para controlar la cantidad de datos recuperados desde la base de datos cada vez. Por ejemplo, si tiene una tabla que contiene 100 filas de datos y establece el tamaño de captura en 10, solo se almacenan en la memoria caché del cliente 10 filas de datos en un momento dado. Aunque esto reduce la velocidad del procesamiento de datos, ofrece la ventaja de usar menos memoria en el cliente, lo que puede resultar especialmente útil si necesita procesar grandes cantidades de datos.</p><p>El archivo de código para este ejemplo se llama cacheRS.java y se encuentra en la siguiente ubicación:</p><p>&lt;<i>directorio de instalación</i>&gt;\sqljdbc_&lt;<i>version</i>&gt;\&lt;<i>language</i>&gt;\help\samples\resultsets</p></div><h1 class="heading">Requisitos</h1><div id="requirementsTitleSection" class="section" name="collapseableSection" style=""><p>Para ejecutar esta aplicación de ejemplo, debe configurar la ruta de clase para que incluya el archivo sqljdbc.jar o el archivo sqljdbc4.jar. Si en la ruta de clase falta una entrada para sqljdbc.jar o sqljdbc4.jar, la aplicación de ejemplo genera la excepción común "Clase no encontrada". Además, debe tener acceso a la base de datos de ejemplo SQL Server 2005 AdventureWorks. Para obtener más información acerca de cómo establecer la ruta de clase (classpath), vea <span sdata="link"><a href="6faaf05b-8b70-4ed2-9b44-eee5897f1cd0.htm">Usar el controlador JDBC</a></span>.</p><div style="margin: .5em 1.5em .5em 1.5em"><b></b><p>El Controlador Microsoft JDBC para SQL Server proporciona los archivos de biblioteca de clases sqljdbc.jar y sqljdbc4.jar que hay que usar dependiendo de su configuración preferida de Java Runtime Environment (JRE). Para obtener más información acerca del archivo JAR que hay que elegir, vea <span sdata="link"><a href="447792bb-f39b-49b4-9fd0-1ef4154c74ab.htm">Requisitos del sistema para el controlador JDBC</a></span>.</p></div></div><h1 class="heading">Ejemplo</h1><div id="exampleSection" class="section" name="collapseableSection" style=""><p>En el siguiente ejemplo, el código muestra realiza una conexión a la base de datos de ejemplo AdventureWorks. A continuación, usa una instrucción SQL con el objeto <a href="ec24963c-8b51-4838-91e9-1fbfa2347451.htm">SQLServerStatement</a>, especifica el tipo de cursor de servidor y, a continuación, ejecuta la instrucción SQL y coloca los datos que devuelve en un objeto <b>SQLServerResultSet</b>.</p><p>Después, el código muestra llama al método <b>timerTest</b> personalizado y pasa como argumentos el tamaño de captura que se va a usar y el conjunto de resultados. El método <b>timerTest</b> establece el tamaño de recuperación del conjunto de resultados con el método <b>setFetchSize</b>, establece la hora de inicio de la prueba y, a continuación, procesa una iteración en el conjunto de resultados con un bucle <span class="code">While</span>. En cuanto sale del bucle <span class="code">While</span>, el código establece la hora de detención de la prueba y, a continuación, muestra el resultado de dicha prueba incluidos el tamaño de recuperación, el número de filas procesadas y el tiempo que se tardó en ejecutar la prueba.</p><div class="sampleCode"><span codeLanguage="other"><pre>import java.sql.*;
+import com.microsoft.sqlserver.jdbc.SQLServerResultSet;
+
+public class cacheRS {
+
+   public static void main(String[] args) {
+
+      // Create a variable for the connection string.
+      String connectionUrl = "jdbc:sqlserver://localhost:1433;" +
+            "databaseName=AdventureWorks;integratedSecurity=true;";
+
+      // Declare the JDBC objects.
+      Connection con = null;
+      Statement stmt = null;
+      ResultSet rs = null;
+
+      try {
+
+         // Establish the connection.
+         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+         con = DriverManager.getConnection(connectionUrl);
+
+         // Create and execute an SQL statement that returns a large
+         // set of data and then display it.
+         String SQL = "SELECT * FROM Sales.SalesOrderDetail;";
+         stmt = con.createStatement(SQLServerResultSet.TYPE_SS_SERVER_CURSOR_FORWARD_ONLY, +
+               SQLServerResultSet.CONCUR_READ_ONLY);
+
+         // Perform a fetch for every row in the result set.
+         rs = stmt.executeQuery(SQL);
+         timerTest(1, rs);
+         rs.close();
+
+         // Perform a fetch for every tenth row in the result set.
+         rs = stmt.executeQuery(SQL);
+         timerTest(10, rs);
+         rs.close();
+
+         // Perform a fetch for every 100th row in the result set.
+         rs = stmt.executeQuery(SQL);
+         timerTest(100, rs);
+         rs.close();
+
+         // Perform a fetch for every 1000th row in the result set.
+         rs = stmt.executeQuery(SQL);
+         timerTest(1000, rs);
+         rs.close();
+
+         // Perform a fetch for every 128th row (the default) in the result set.
+         rs = stmt.executeQuery(SQL);
+         timerTest(0, rs);
+         rs.close();
+      }
+
+      // Handle any errors that may have occurred.
+      catch (Exception e) {
+         e.printStackTrace();
+      }
+
+      finally {
+         if (rs != null) try { rs.close(); } catch(Exception e) {}
+         if (stmt != null) try { stmt.close(); } catch(Exception e) {}
+         if (con != null) try { con.close(); } catch(Exception e) {}
+      }
+   }
+
+   private static void timerTest(int fetchSize, ResultSet rs) {
+      try {
+
+         // Declare the variables for tracking the row count and elapsed time.
+         int rowCount = 0;
+         long startTime = 0;
+         long stopTime = 0;
+         long runTime = 0;
+
+         // Set the fetch size then iterate through the result set to
+         // cache the data locally.
+         rs.setFetchSize(fetchSize);
+         startTime = System.currentTimeMillis();
+         while (rs.next()) {
+            rowCount++;
+         }
+         stopTime = System.currentTimeMillis();
+         runTime = stopTime - startTime;
+
+         // Display the results of the timer test.
+         System.out.println("FETCH SIZE: " + rs.getFetchSize());
+         System.out.println("ROWS PROCESSED: " + rowCount);
+         System.out.println("TIME TO EXECUTE: " + runTime);
+         System.out.println();
+
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
+   }
+}</pre></span></div></div><span id="seeAlsoSpan"><h1 class="heading">Vea también</h1></span><div id="seeAlsoSection" class="section" name="collapseableSection" style=""><div class="seeAlsoStyle"><span sdata="link"><a href="4fc4b1c6-3075-4ad7-9244-865d9ede7ae6.htm">Trabajar con conjuntos de resultados</a></span></div></div></div><div id="footer" class="section"><span id="feedbackarea">Enviar <a href="javascript:SubmitFeedback('DevDocs@Microsoft.com','','','','8.0.12060.10000','%0\dLe%20agradecemos%20sus%20comentarios.%20Los%20equipos%20de%20desarrolladores%20usan%20estos%20comentarios%20para%20mejorar%20la%20documentación.%20Mientras%20revisamos%20los%20comentarios,%20es%20posible%20que%20le%20enviemos%20un%20correo%20electrónico%20para%20solicitarle%20alguna%20aclaración%20o%20comentarios%20sobre%20una%20posible%20solución.%20No%20usamos%20su%20dirección%20de%20correo%20electrónico%20para%20ningún%20otro%20propósito%20y%20ésta%20se%20borra%20una%20vez%20finalizada%20la%20revisió.%0\APara%20obtener%20más%20información%20acerca%20de%20las%20directivas%20de%20privacidad%20de%20Microsoft,%20vea%20http://privacy.microsoft.com/es-es/default.aspx.%0\A%0\d','Comentarios%20del cliente');">comentarios de </a> acerca de este tema Microsoft.</span><span id="copyrightarea"><p><a href="9bad553b-9e70-4696-8499-2e35f772a1e0.htm">© 2012 Microsoft. Todos los derechos reservados.</a></p></span></div></div></body></html>
