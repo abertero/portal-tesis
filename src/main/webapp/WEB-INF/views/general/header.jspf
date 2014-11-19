@@ -3,4 +3,5 @@
   <link rel='stylesheet' href='${ctx}/static/css/jquery-ui.css'>
   <link rel="stylesheet" href="${ctx}/static/css/style.css" media="screen" type="text/css" />
   <script src='${ctx}/static/js/jquery_and_jqueryui.js'></script>
+  <script src='${ctx}/static/js/jquery_and_jqueryui__.js'></script>
 </head>
