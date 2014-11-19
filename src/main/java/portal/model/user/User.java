@@ -2,6 +2,7 @@ package portal.model.user;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import portal.config.JPA;
 import portal.model.base.BaseEntity;
@@ -96,6 +97,7 @@ public class User extends BaseEntity {
     //</editor-fold>
 
     //<editor-fold desc="Methods">
+    @Transactional
     public boolean save() {
         try {
             JPA.em().persist(this);

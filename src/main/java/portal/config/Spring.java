@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-@Component("_spring_scg")
+@Component
 public class Spring {
     private static final Logger logger = LoggerFactory.getLogger(Spring.class);
 

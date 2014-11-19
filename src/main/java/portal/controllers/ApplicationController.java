@@ -138,7 +138,7 @@ public class ApplicationController {
         return applicationIndex();
     }
 
-    @RequestMapping(value = "loggout", method = RequestMethod.POST)
+    @RequestMapping(value = "loggout", method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView loggout() {
         return applicationIndex();
     }

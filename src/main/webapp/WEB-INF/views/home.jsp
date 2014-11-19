@@ -8,9 +8,13 @@
 <p><spring:message code="login.detail"/></p>
 
 <form action="${ctx}/login" method="post">
-    <input type="text" name="username" id="username" placeholder="<spring:message code="login.username"/>"/>
-    <input type="password" name="password" id="password" placeholder="<spring:message code="login.password"/>">
-    <input type="submit" name="login" class="login login-submit" value="<spring:message code="login.submit"/>"/>
+  <div class="form-inline">
+    <input type="text" class="col-xs-12 col-md-6 form-control" name="username" id="username"
+           placeholder="<spring:message code="login.username"/>"/>
+    <input type="password" class="col-xs-12 col-md-6 form-control" name="password" id="password"
+           placeholder="<spring:message code="login.password"/>">
+  </div>
+  <input type="submit" name="login" class="btn btn-primary" value="<spring:message code="login.submit"/>"/>
 </form>
 
 <p><spring:message code="login.register.message"/> <a href="${ctx}/register"><spring:message

@@ -7,53 +7,69 @@
 <p><spring:message code="login.detail"/></p>
 
 <c:choose>
-  <c:if test="${canEdit}">
-    <form action="${ctx}/registerUser" method="post">
-      <div>
-        <div>
-          <label for="username"><spring:message code="register.username"/></label>
+  <c:when test="${canEdit}">
+    <form action="${ctx}/saveUser" method="post">
+      <div class="form-horizontal">
+        <div class="form-group">
+          <label class="col-xs-12 col-sm-2 control-label" for="username"><spring:message code="register.username"/></label>
 
-          <div><input type="text" name="username" id="username" value="${user.username}"/></div>
+          <div class="col-xs-12 col-sm-9">
+            <input type="text" class="form-control" name="username" id="username" value="${user.username}"/>
+          </div>
         </div>
-        <div>
-          <label for="password"><spring:message code="register.password"/></label>
+        <div class="form-group">
+          <label class="col-xs-12 col-sm-2 control-label" for="password"><spring:message code="register.password"/></label>
 
-          <div><input type="password" name="password" id="password" value=""/></div>
+          <div class="col-xs-12 col-sm-9">
+            <input type="password" class="form-control" name="password" id="password" value=""/>
+          </div>
         </div>
-        <div>
-          <label for="repeatPassword"><spring:message code="register.repeatPassword"/></label>
+        <div class="form-group">
+          <label class="col-xs-12 col-sm-2 control-label" for="repeatPassword"><spring:message code="register.repeatPassword"/></label>
 
-          <div><input type="password" name="repeatPassword" id="repeatPassword" value=""/></div>
+          <div class="col-xs-12 col-sm-9">
+            <input type="password" class="form-control" name="repeatPassword" id="repeatPassword" value=""/>
+          </div>
         </div>
-        <div>
-          <label for="firstName"><spring:message code="register.firstName"/></label>
+        <div class="form-group">
+          <label class="col-xs-12 col-sm-2 control-label" for="firstName"><spring:message code="register.firstName"/></label>
 
-          <div><input type="text" name="firstName" id="firstName" value="${user.firstName}"/></div>
+          <div class="col-xs-12 col-sm-9">
+            <input type="text" class="form-control" name="firstName" id="firstName" value="${user.firstName}"/>
+          </div>
         </div>
-        <div>
-          <label for="lastName"><spring:message code="register.lastName"/></label>
+        <div class="form-group">
+          <label class="col-xs-12 col-sm-2 control-label" for="lastName"><spring:message code="register.lastName"/></label>
 
-          <div><input type="text" name="lastName" id="lastName" value="${user.lastName}"/></div>
+          <div class="col-xs-12 col-sm-9">
+            <input type="text" class="form-control" name="lastName" id="lastName" value="${user.lastName}"/>
+          </div>
         </div>
-        <div>
-          <label for="email"><spring:message code="register.email"/></label>
+        <div class="form-group">
+          <label class="col-xs-12 col-sm-2 control-label" for="email"><spring:message code="register.email"/></label>
 
-          <div><input type="text" name="email" id="email" value="${user.email}"/></div>
+          <div class="col-xs-12 col-sm-9">
+            <input type="text" class="form-control" name="email" id="email" value="${user.email}"/>
+          </div>
         </div>
-        <div>
-          <label for="phone"><spring:message code="register.phone"/></label>
+        <div class="form-group">
+          <label class="col-xs-12 col-sm-2 control-label" for="phone"><spring:message code="register.phone"/></label>
 
-          <div><input type="text" name="phone" id="phone" value="${user.phone}"/></div>
+          <div class="col-xs-12 col-sm-9">
+            <input type="text" class="form-control" name="phone" id="phone" value="${user.phone}"/>
+          </div>
         </div>
-        <div>
-          <label for="address"><spring:message code="register.address"/></label>
+        <div class="form-group">
+          <label class="col-xs-12 col-sm-2 control-label" for="address"><spring:message code="register.address"/></label>
 
-          <div><input type="text" name="address" id="address" value="${user.address}"/></div>
+          <div class="col-xs-12 col-sm-9">
+            <input type="text" class="form-control" name="address" id="address" value="${user.address}"/>
+          </div>
         </div>
       </div>
-      <input type="submit" value="<spring:message code="register.submit"/>"/>
+      <input type="submit" class="btn btn-primary" value="<spring:message code="register.submit"/>"/>
     </form>
-  </c:if>
+  </c:when>
   <c:otherwise>
     <table>
       <tr>

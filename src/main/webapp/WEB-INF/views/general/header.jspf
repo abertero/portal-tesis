@@ -1,6 +1,6 @@
 <head>
   <title><spring:message code="application.title"/>*</title>
-  <link rel='stylesheet' href='${ctx}/static/css/jquery-ui.css'>
-  <link rel="stylesheet" href="${ctx}/static/css/style.css" media="screen" type="text/css" />
-  <script src='${ctx}/static/js/jquery_and_jqueryui.js'></script>
+  <link rel='stylesheet' href='${ctx}/static/css/bootstrap.min.css'>
+  <link rel="stylesheet" href="${ctx}/static/css/bootstrap-theme.min.css"/>
+  <script src="${ctx}/static/js/bootstrap.min.js"></script>
 </head>
