@@ -12,6 +12,7 @@ public abstract class BaseEntity {
     protected Long id;
     protected String altKey;
 
+    //<editor-fold desc="Getters and Setters">
     @PrePersist
     public void generateAltKey() {
         this.altKey = UUID.randomUUID().toString();
@@ -32,4 +33,16 @@ public abstract class BaseEntity {
     public void setAltKey(String altKey) {
         this.altKey = altKey;
     }
+    //</editor-fold>
+
+    //<editor-fold desc="Methods">
+    @Override
+    public String toString() {
+        return this.getClass().getCanonicalName() + "{" + attributes() + "}";
+    }
+
+    protected String attributes() {
+        return "id: " + id + ", altKey: " + altKey;
+    }
+    //</editor-fold>
 }

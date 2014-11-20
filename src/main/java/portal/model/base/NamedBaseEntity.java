@@ -9,6 +9,7 @@ public abstract class NamedBaseEntity extends BaseEntity {
     @Lob
     protected String description;
 
+    //<editor-fold desc="Getters and Setters">
     public String getName() {
         return name;
     }
@@ -23,5 +24,11 @@ public abstract class NamedBaseEntity extends BaseEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+    //</editor-fold>
+
+    @Override
+    protected String attributes() {
+        return super.attributes() + ", name: " + name + ", description: " + description;
     }
 }

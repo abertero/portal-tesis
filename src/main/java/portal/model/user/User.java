@@ -93,9 +93,19 @@ public class User extends BaseEntity {
     //</editor-fold>
 
     //<editor-fold desc="Methods">
+
+
+    @Override
+    protected String attributes() {
+        return super.attributes() + ", username: " + username + ", password: " + password +
+                ", firstName: " + firstName + ", lastName: :" + lastName + ", email: " + email +
+                ", phone: " + phone + ", address: " + address;
+    }
+
     public boolean save() {
         try {
             JPA.em().persist(this);
+            logger.info("Added user " + toString());
             return true;
         } catch (Exception e) {
             logger.error("Excepcion creando usuario", e);

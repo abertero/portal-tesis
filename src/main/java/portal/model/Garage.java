@@ -21,6 +21,12 @@ public class Garage extends NamedBaseEntity {
     }
     //</editor-fold>
 
+    @Override
+    protected String attributes() {
+        return super.attributes() + ", address: " + address;
+    }
+
+    //<editor-fold desc="Static methods">
     public static Garage dummy() {
         Garage dummy = new Garage();
         dummy.setName("name_" + UUID.randomUUID().toString());
@@ -28,7 +34,6 @@ public class Garage extends NamedBaseEntity {
         return dummy;
     }
 
-    //<editor-fold desc="Static methods">
     public static List<Garage> findAll() {
         return JPA.findAll(Garage.class);
     }

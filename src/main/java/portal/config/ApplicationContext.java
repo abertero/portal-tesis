@@ -1,17 +1,18 @@
 package portal.config;
 
-import org.springframework.context.annotation.*;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-
 import com.jolbox.bonecp.BoneCPDataSource;
 import org.hibernate.ejb.HibernatePersistence;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.*;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
@@ -27,6 +28,7 @@ import java.util.Properties;
 @ImportResource("classpath:config/applicationContext.xml")
 @PropertySource("classpath:config/application.properties")
 public class ApplicationContext {
+    private static final Logger logger = LoggerFactory.getLogger(ApplicationContext.class);
 
     private static final String VIEW_RESOLVER_PREFIX = "/WEB-INF/views/";
     private static final String VIEW_RESOLVER_SUFFIX = ".jsp";
@@ -58,6 +60,7 @@ public class ApplicationContext {
         dataSource.setUsername(environment.getRequiredProperty(PROPERTY_NAME_DATABASE_USERNAME));
         dataSource.setPassword(environment.getRequiredProperty(PROPERTY_NAME_DATABASE_PASSWORD));
 
+        logger.info("Init dataSource " + dataSource.toString());
         return dataSource;
     }
 
@@ -67,6 +70,7 @@ public class ApplicationContext {
 
         transactionManager.setEntityManagerFactory(entityManagerFactoryBean().getObject());
 
+        logger.info("Init transactionManager " + transactionManager.toString());
         return transactionManager;
     }
 
@@ -87,6 +91,7 @@ public class ApplicationContext {
 
         entityManagerFactoryBean.setJpaProperties(jpaProterties);
 
+        logger.info("Init entityManagerFactory " + entityManagerFactoryBean.toString());
         return entityManagerFactoryBean;
     }
 
@@ -97,6 +102,7 @@ public class ApplicationContext {
         messageSource.setBasename(environment.getRequiredProperty(PROPERTY_NAME_MESSAGESOURCE_BASENAME));
         messageSource.setUseCodeAsDefaultMessage(Boolean.parseBoolean(environment.getRequiredProperty(PROPERTY_NAME_MESSAGESOURCE_USE_CODE_AS_DEFAULT_MESSAGE)));
 
+        logger.info("Init messageSource");
         return messageSource;
     }
 
@@ -108,7 +114,8 @@ public class ApplicationContext {
         viewResolver.setPrefix(VIEW_RESOLVER_PREFIX);
         viewResolver.setSuffix(VIEW_RESOLVER_SUFFIX);
 
+        logger.info("Init viewResolver " + viewResolver.toString());
         return viewResolver;
     }
 
- }
+}

@@ -30,6 +30,12 @@ public class Technician extends BaseEntity {
     }
     //</editor-fold>
 
+    @Override
+    protected String attributes() {
+        return super.attributes() + ", firstName: " + firstName + ", lastName: " + lastName;
+    }
+
+    //<editor-fold desc="Static methods">
     public static Technician dummy() {
         Technician dummy = new Technician();
         dummy.setFirstName("name_" + UUID.randomUUID().toString());
@@ -37,7 +43,6 @@ public class Technician extends BaseEntity {
         return dummy;
     }
 
-    //<editor-fold desc="Static methods">
     public static List<Technician> findAll() {
         return JPA.findAll(Technician.class);
     }

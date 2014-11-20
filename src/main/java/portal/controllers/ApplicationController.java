@@ -5,10 +5,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import portal.config.ApplicationContants;
 import portal.model.Garage;
 import portal.model.SaleOrder;
 import portal.model.Technician;
 import portal.model.user.User;
+import portal.utils.SessionUtils;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/")
@@ -132,16 +136,19 @@ public class ApplicationController {
 
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public ModelAndView login(@RequestParam String username,
-                              @RequestParam String password) {
+                              @RequestParam String password,
+                              HttpServletRequest request) {
         boolean validate = User.validate(username, password);
         if (validate) {
+            SessionUtils.addProperty(request, ApplicationContants.SESSION_USERNAME, username);
             return mainMenu();
         }
         return applicationIndex();
     }
 
     @RequestMapping(value = "loggout", method = {RequestMethod.GET, RequestMethod.POST})
-    public ModelAndView loggout() {
+    public ModelAndView loggout(HttpServletRequest request) {
+        SessionUtils.removeProperty(request, ApplicationContants.SESSION_USERNAME);
         return applicationIndex();
     }
     //</editor-fold>

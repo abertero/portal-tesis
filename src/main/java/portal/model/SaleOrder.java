@@ -16,9 +16,6 @@ public class SaleOrder extends BaseEntity {
     private String cardName;
     @Temporal(TemporalType.TIMESTAMP)
     private Date docDate;
-    private Long quantity;
-    private String whsCode;
-    private Double uAuComision;
     private Integer uAuAno;
     private String uAuPatente;
     private String uAuChasis;
@@ -34,6 +31,9 @@ public class SaleOrder extends BaseEntity {
     private Technician technician;
     @ManyToOne(fetch = FetchType.LAZY)
     private Vehicle vehicle;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "saleOrder", cascade = CascadeType.ALL)
+    public List<SaleOrderDetail> details = new ArrayList<>();
 
     //<editor-fold desc="Getters and setters">
     public Long getDocNum() {
@@ -66,30 +66,6 @@ public class SaleOrder extends BaseEntity {
 
     public void setDocDate(Date docDate) {
         this.docDate = docDate;
-    }
-
-    public Long getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Long quantity) {
-        this.quantity = quantity;
-    }
-
-    public String getWhsCode() {
-        return whsCode;
-    }
-
-    public void setWhsCode(String whsCode) {
-        this.whsCode = whsCode;
-    }
-
-    public Double getuAuComision() {
-        return uAuComision;
-    }
-
-    public void setuAuComision(Double uAuComision) {
-        this.uAuComision = uAuComision;
     }
 
     public Integer getuAuAno() {
@@ -179,7 +155,25 @@ public class SaleOrder extends BaseEntity {
     public void setVehicle(Vehicle vehicle) {
         this.vehicle = vehicle;
     }
+
+    public List<SaleOrderDetail> getDetails() {
+        return details;
+    }
+
+    public void setDetails(List<SaleOrderDetail> details) {
+        this.details = details;
+    }
+
     //</editor-fold>
+
+
+    @Override
+    protected String attributes() {
+        return super.attributes() + ", docNum: " + docNum + ", cardCode: " + cardCode + ", cardName: " + cardName +
+                ", docDate: " + docDate + ", uAuAno: " + uAuAno + ",uAuPatente: " + uAuPatente + ", uAuChasis: " + uAuChasis +
+                ", uAuCodVend: " + uAuCodVend + ", uAuNameVend: " + uAuNameVend + ", uAuLastNameVend: " + uAuLastNameVend +
+                ", uAuBodDestino: " + uAuBodDestino + ", prjName: " + prjName;
+    }
 
     //<editor-fold desc="Static methods">
     public static SaleOrder dummy() {
@@ -191,10 +185,7 @@ public class SaleOrder extends BaseEntity {
         dummy.setuAuBodDestino("u_au_bod_destino_" + UUID.randomUUID().toString());
         dummy.setuAuChasis("u_au_chasis_" + UUID.randomUUID().toString());
         dummy.setuAuCodVend("u_au_cod_vend_" + UUID.randomUUID().toString());
-        dummy.setWhsCode("whs_code_" + UUID.randomUUID().toString());
         dummy.setuAuPatente("u_au_patente_" + UUID.randomUUID().toString());
-        dummy.setQuantity(23L);
-        dummy.setuAuComision(32923D);
         dummy.setuAuNameVend("u_au_name_vend_" + UUID.randomUUID().toString());
         dummy.setuAuLastNameVend("u_au_last_name_vend_" + UUID.randomUUID().toString());
         dummy.setDocNum(312931L);
