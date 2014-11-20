@@ -1,6 +1,7 @@
 package portal.controllers;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -116,6 +117,7 @@ public class ApplicationController {
 
     //<editor-fold desc="Actions">
     @RequestMapping(value = "saveUser", method = RequestMethod.POST)
+    @Transactional
     public ModelAndView saveUser(@ModelAttribute User user, BindingResult errors) {
         user.validateUserForm(errors);
         if (errors.hasErrors()) {

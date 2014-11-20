@@ -9,7 +9,7 @@
 <p><spring:message code="menu.detail"/></p>
 
 <ul>
-  <li><a href="${ctx}/manager/profile"><spring:message code="menu.profileManager.name"/></a></li>
+  <li><a href="${ctx}/user"><spring:message code="menu.profileManager.name"/></a></li>
   <li><a href="${ctx}/manager/technician"><spring:message code="menu.technicianManager.name"/></a></li>
   <li><a href="${ctx}/garage"><spring:message code="menu.garageList.name"/></a></li>
   <li><a href="${ctx}/parking"><spring:message code="menu.parkingInfo.name"/></a></li>

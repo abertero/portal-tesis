@@ -1,15 +1,14 @@
 package portal.model.base;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.PrePersist;
+import javax.persistence.*;
 import java.util.UUID;
 
 @MappedSuperclass
 public abstract class BaseEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.TABLE)
+    @TableGenerator(name = "appSeqStore", table = "app_seq_store", pkColumnName = "APP_SEQ_NAME",
+            pkColumnValue = "APP_SEQ_GEN", valueColumnName = "APP_SEQ_VALUE", initialValue = 1, allocationSize = 1)
     protected Long id;
     protected String altKey;
 
