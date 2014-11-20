@@ -1,5 +1,6 @@
 package portal.controllers;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -24,9 +25,16 @@ public class ApplicationController {
         return mv;
     }
 
+    private ModelAndView doMenu(HttpServletRequest request, String view) {
+        ModelAndView mv = new ModelAndView(view);
+        String username = SessionUtils.getProperty(request, ApplicationContants.SESSION_USERNAME);
+        mv.addObject("user", StringUtils.isNotEmpty(username) ? User.findByUsername(username) : new User());
+        return mv;
+    }
+
     @RequestMapping(value = "menu", method = RequestMethod.GET)
-    public ModelAndView mainMenu() {
-        ModelAndView mv = new ModelAndView("mainMenu");
+    public ModelAndView mainMenu(HttpServletRequest request) {
+        ModelAndView mv = doMenu(request, "mainMenu");
         return mv;
     }
 
@@ -72,15 +80,15 @@ public class ApplicationController {
     }
 
     @RequestMapping(value = "order", method = RequestMethod.GET)
-    public ModelAndView saleOrderList() {
-        ModelAndView mv = new ModelAndView("saleOrderList");
+    public ModelAndView saleOrderList(HttpServletRequest request) {
+        ModelAndView mv = doMenu(request, "saleOrderList");
         mv.addObject("salesOrder", SaleOrder.findAll());
         return mv;
     }
 
     @RequestMapping(value = "order/{altKeyOrder}", method = RequestMethod.GET)
-    public ModelAndView saleOrderDetail(@PathVariable String altKeyOrder, @RequestParam(required = false, defaultValue = "false") Boolean canEdit) {
-        return doSaleOrder(SaleOrder.findByAltKey(altKeyOrder), canEdit);
+    public ModelAndView saleOrderDetail(@PathVariable String altKeyOrder, @RequestParam(required = false, defaultValue = "false") Boolean canEdit, HttpServletRequest request) {
+        return doSaleOrder(SaleOrder.findByAltKey(altKeyOrder), canEdit, request);
     }
 
     @RequestMapping(value = "parking", method = RequestMethod.GET)
@@ -111,8 +119,8 @@ public class ApplicationController {
         return mv;
     }
 
-    private ModelAndView doSaleOrder(SaleOrder saleOrder, boolean canEdit) {
-        ModelAndView mv = new ModelAndView("saleOrder");
+    private ModelAndView doSaleOrder(SaleOrder saleOrder, boolean canEdit, HttpServletRequest request) {
+        ModelAndView mv = doMenu(request, "saleOrder");
         mv.addObject("saleOrder", saleOrder);
         mv.addObject("canEdit", canEdit);
         return mv;
@@ -129,7 +137,7 @@ public class ApplicationController {
         }
         boolean result = user.save();
         if (result) {
-            return mainMenu();
+            return new ModelAndView("redirect:menu");
         }
         return registerUser();
     }
@@ -141,7 +149,7 @@ public class ApplicationController {
         boolean validate = User.validate(username, password);
         if (validate) {
             SessionUtils.addProperty(request, ApplicationContants.SESSION_USERNAME, username);
-            return mainMenu();
+            return new ModelAndView("redirect:menu");
         }
         return applicationIndex();
     }

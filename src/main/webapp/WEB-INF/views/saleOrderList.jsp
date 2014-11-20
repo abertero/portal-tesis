@@ -2,6 +2,8 @@
 <html>
 <%@include file="general/header.jspf" %>
 <body>
+<%@include file="general/loggout.jspf" %>
+
 <h1><spring:message code="saleOrderList.title"/></h1>
 
 <p><spring:message code="saleOrderList.detail"/></p>

@@ -86,7 +86,7 @@
           <c:forEach items="${saleOrder.details}" var="detail">
             <tr>
               <td><c:out value="${detail.itemCode}"/></td>
-              <td><c:out value="${detail.decription}"/></td>
+              <td><c:out value="${detail.description}"/></td>
               <td><c:out value="${detail.quantity}"/></td>
               <td><c:out value="${detail.uAuComision}"/></td>
               <td><c:out value="${detail.totalComision}"/></td>

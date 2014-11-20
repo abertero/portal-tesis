@@ -1,3 +1,7 @@
-<div style="float:right;">
-  <p><a href="${ctx}/loggout"><spring:message code="menu.loggout"/></a></p>
+<div style="z-index: 10; position: absolute; right: 0; top: 0;" class="panel panel-default">
+  <div class="panel-body">
+    <span><spring:message code="menu.welcome.message"/>&nbsp;<c:out value="${user.fullName}"/></span>
+
+    <p><a href="${ctx}/loggout"><spring:message code="menu.loggout"/></a></p>
+  </div>
 </div>

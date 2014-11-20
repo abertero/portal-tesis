@@ -1,5 +1,6 @@
 package portal.model.user;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
@@ -116,6 +117,12 @@ public class User extends BaseEntity {
     public void validateUserForm(BindingResult errors) {
 
     }
+
+    @Transient
+    public String getFullName() {
+        return StringUtils.defaultString(firstName) + " " + StringUtils.defaultString(lastName);
+    }
+
     //</editor-fold>
 
     //<editor-fold desc="Static methods">

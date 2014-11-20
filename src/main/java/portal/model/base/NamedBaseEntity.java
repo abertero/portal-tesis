@@ -1,12 +1,10 @@
 package portal.model.base;
 
-import javax.persistence.Lob;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public abstract class NamedBaseEntity extends BaseEntity {
     protected String name;
-    @Lob
     protected String description;
 
     //<editor-fold desc="Getters and Setters">

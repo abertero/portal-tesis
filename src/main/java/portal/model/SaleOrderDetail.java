@@ -4,13 +4,11 @@ import portal.model.base.BaseEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
 @Entity
 public class SaleOrderDetail extends BaseEntity {
     private String itemCode;
-    @Lob
     private String description;
     private Long quantity;
     private String whsCode;
