@@ -243,4 +243,11 @@ public class JPA {
         }
     }
 
+
+    public static <T> List<T> pageQuery(String query, Class clazz, int page) {
+        TypedQuery<T> typedQuery = JPA.em().createQuery(query, clazz);
+        typedQuery.setMaxResults(ApplicationContants.JPA_MAX_RESULTS);
+        typedQuery.setFirstResult(page);
+        return typedQuery.getResultList();
+    }
 }

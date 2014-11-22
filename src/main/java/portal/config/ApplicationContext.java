@@ -18,6 +18,7 @@ import org.springframework.web.servlet.view.JstlView;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.Properties;
 
 
@@ -59,6 +60,13 @@ public class ApplicationContext {
         dataSource.setJdbcUrl(environment.getRequiredProperty(PROPERTY_NAME_DATABASE_URL));
         dataSource.setUsername(environment.getRequiredProperty(PROPERTY_NAME_DATABASE_USERNAME));
         dataSource.setPassword(environment.getRequiredProperty(PROPERTY_NAME_DATABASE_PASSWORD));
+
+        try {
+            String catalog = dataSource.getConnection().getCatalog();
+            logger.warn("EXITO CONECTANDOSE A DB " + catalog);
+        } catch (SQLException e) {
+            logger.error("NO SE PUDO CONNECTAR A LA DB " + PROPERTY_NAME_DATABASE_URL, e);
+        }
 
         logger.info("Init dataSource " + dataSource.toString());
         return dataSource;

@@ -25,6 +25,11 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
+        servletContext.setInitParameter(LOG4J_CONFIG_LOCATION, LOG4J_CONFIG_LOCATION_VALUE);
+        Log4jConfigListener log4jListener = new Log4jConfigListener();
+        servletContext.addListener(log4jListener);
+        logger.info("Log4j added");
+
         AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
         rootContext.register(ApplicationContext.class, Spring.class, JPA.class);
         logger.info("Registered to context ApplicationContext, Spring and JPA Beans");
@@ -36,10 +41,5 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 
         servletContext.addListener(new ContextLoaderListener(rootContext));
         logger.info("Context loader listener added");
-
-        servletContext.setInitParameter(LOG4J_CONFIG_LOCATION, LOG4J_CONFIG_LOCATION_VALUE);
-        Log4jConfigListener log4jListener = new Log4jConfigListener();
-        servletContext.addListener(log4jListener);
-        logger.info("Log4j added");
     }
 }

@@ -11,6 +11,7 @@ import portal.model.Garage;
 import portal.model.SaleOrder;
 import portal.model.Technician;
 import portal.model.user.User;
+import portal.model.views.SaleOrderHeaderView;
 import portal.utils.SessionUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -82,13 +83,13 @@ public class ApplicationController {
     @RequestMapping(value = "order", method = RequestMethod.GET)
     public ModelAndView saleOrderList(HttpServletRequest request) {
         ModelAndView mv = doMenu(request, "saleOrderList");
-        mv.addObject("salesOrder", SaleOrder.findAll());
+        mv.addObject("salesOrder", SaleOrderHeaderView.findAll(1));
         return mv;
     }
 
-    @RequestMapping(value = "order/{altKeyOrder}", method = RequestMethod.GET)
-    public ModelAndView saleOrderDetail(@PathVariable String altKeyOrder, @RequestParam(required = false, defaultValue = "false") Boolean canEdit, HttpServletRequest request) {
-        return doSaleOrder(SaleOrder.findByAltKey(altKeyOrder), canEdit, request);
+    @RequestMapping(value = "order/{docNum}", method = RequestMethod.GET)
+    public ModelAndView saleOrderDetail(@PathVariable Long docNum, @RequestParam(required = false, defaultValue = "false") Boolean canEdit, HttpServletRequest request) {
+        return doSaleOrder(SaleOrder.findByDocNum(docNum), canEdit, request);
     }
 
     @RequestMapping(value = "parking", method = RequestMethod.GET)
@@ -130,13 +131,14 @@ public class ApplicationController {
     //<editor-fold desc="Actions">
     @RequestMapping(value = "saveUser", method = RequestMethod.POST)
     @Transactional
-    public ModelAndView saveUser(@ModelAttribute User user, BindingResult errors) {
+    public ModelAndView saveUser(@ModelAttribute User user, BindingResult errors, HttpServletRequest request) {
         user.validateUserForm(errors);
         if (errors.hasErrors()) {
             return doUser(user, true);
         }
         boolean result = user.save();
         if (result) {
+            SessionUtils.addProperty(request, ApplicationContants.SESSION_USERNAME, user.getUsername());
             return new ModelAndView("redirect:menu");
         }
         return registerUser();
