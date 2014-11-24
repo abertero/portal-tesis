@@ -7,7 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import portal.config.ApplicationContants;
-import portal.model.Garage;
+import portal.model.ParkingLot;
 import portal.model.SaleOrder;
 import portal.model.Technician;
 import portal.model.user.User;
@@ -21,14 +21,19 @@ import javax.servlet.http.HttpServletRequest;
 public class ApplicationController {
 
     @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView applicationIndex() {
-        ModelAndView mv = new ModelAndView("home");
+    public ModelAndView applicationIndex(HttpServletRequest request) {
+        ModelAndView mv = doMenu(request, "redirect:menu");
         return mv;
     }
 
     private ModelAndView doMenu(HttpServletRequest request, String view) {
-        ModelAndView mv = new ModelAndView(view);
         String username = SessionUtils.getProperty(request, ApplicationContants.SESSION_USERNAME);
+        ModelAndView mv;
+        if (StringUtils.isEmpty(username)) {
+            mv = new ModelAndView("home");
+        } else {
+            mv = new ModelAndView(view);
+        }
         mv.addObject("user", StringUtils.isNotEmpty(username) ? User.findByUsername(username) : new User());
         return mv;
     }
@@ -41,49 +46,49 @@ public class ApplicationController {
 
     @RequestMapping(value = "register", method = RequestMethod.GET)
     public ModelAndView registerUser() {
-        return doUser(new User(), true);
+        return doUser(new User(), true, false, null);
     }
 
     @RequestMapping(value = "user", method = RequestMethod.GET)
-    public ModelAndView userList() {
-        ModelAndView mv = new ModelAndView("userList");
+    public ModelAndView userList(HttpServletRequest request) {
+        ModelAndView mv = doMenu(request, "userList");
         mv.addObject("users", User.findAll());
         return mv;
     }
 
     @RequestMapping(value = "user/{altKeyUser}", method = RequestMethod.GET)
-    public ModelAndView userDetail(@PathVariable String altKeyUser, @RequestParam(required = false, defaultValue = "false") Boolean canEdit) {
-        return doUser(User.findByAltKey(altKeyUser), canEdit != null && canEdit);
+    public ModelAndView userDetail(@PathVariable String altKeyUser, @RequestParam(required = false, defaultValue = "false") Boolean canEdit, HttpServletRequest request) {
+        return doUser(User.findByAltKey(altKeyUser), canEdit != null && canEdit, true, request);
+    }
+
+    @RequestMapping(value = "registerTechnician", method = RequestMethod.GET)
+    public ModelAndView registerTechnician(HttpServletRequest request) {
+        return doTechnician(new Technician(), true, request);
     }
 
     @RequestMapping(value = "technician", method = RequestMethod.GET)
-    public ModelAndView technicianList() {
-        ModelAndView mv = new ModelAndView("technicianList");
+    public ModelAndView technicianList(HttpServletRequest request) {
+        ModelAndView mv = doMenu(request, "technicianList");
         mv.addObject("technicians", Technician.findAll());
         return mv;
     }
 
     @RequestMapping(value = "manager/technician/{altKeyTechnician}", method = RequestMethod.GET)
-    public ModelAndView technicianDetail(@PathVariable String altKeyTechnician, @RequestParam(required = false, defaultValue = "false") Boolean canEdit) {
-        return doTechnician(Technician.findByAltKey(altKeyTechnician), canEdit != null && canEdit);
+    public ModelAndView technicianDetail(@PathVariable String altKeyTechnician, @RequestParam(required = false, defaultValue = "false") Boolean canEdit, HttpServletRequest request) {
+        return doTechnician(Technician.findByAltKey(altKeyTechnician), canEdit != null && canEdit, request);
     }
 
-    @RequestMapping(value = "garage", method = RequestMethod.GET)
-    public ModelAndView garageList() {
-        ModelAndView mv = new ModelAndView("garageList");
-        mv.addObject("garages", Garage.findAll());
+    @RequestMapping(value = "parkingLot", method = RequestMethod.GET)
+    public ModelAndView parkingLotList(HttpServletRequest request) {
+        ModelAndView mv = doMenu(request, "parkingLotList");
+        mv.addObject("parkingLots", ParkingLot.findAll());
         return mv;
-    }
-
-    @RequestMapping(value = "garage/{altKeyGarage}", method = RequestMethod.GET)
-    public ModelAndView garageDetail(@PathVariable String altKeyGarage, @RequestParam(required = false, defaultValue = "false") Boolean canEdit) {
-        return doGarage(Garage.findByAltKey(altKeyGarage), canEdit);
     }
 
     @RequestMapping(value = "order", method = RequestMethod.GET)
     public ModelAndView saleOrderList(HttpServletRequest request) {
         ModelAndView mv = doMenu(request, "saleOrderList");
-        mv.addObject("salesOrder", SaleOrderHeaderView.findAll(1));
+        mv.addObject("salesOrder", SaleOrderHeaderView.findAll(0));
         return mv;
     }
 
@@ -92,30 +97,18 @@ public class ApplicationController {
         return doSaleOrder(SaleOrder.findByDocNum(docNum), canEdit, request);
     }
 
-    @RequestMapping(value = "parking", method = RequestMethod.GET)
-    public ModelAndView parkingList() {
-        ModelAndView mv = new ModelAndView("parkingList");
-        return mv;
-    }
-
     //<editor-fold desc="Model">
-    private ModelAndView doUser(User user, boolean canEdit) {
-        ModelAndView mv = new ModelAndView("user");
+    private ModelAndView doUser(User user, boolean canEdit, boolean withSession, HttpServletRequest request) {
+        ModelAndView mv = withSession ? doMenu(request, "user") : new ModelAndView("user");
         mv.addObject("user", user);
         mv.addObject("canEdit", canEdit);
+        mv.addObject("withSession", withSession);
         return mv;
     }
 
-    private ModelAndView doTechnician(Technician technician, boolean canEdit) {
-        ModelAndView mv = new ModelAndView("technician");
+    private ModelAndView doTechnician(Technician technician, boolean canEdit, HttpServletRequest request) {
+        ModelAndView mv = doMenu(request, "technician");
         mv.addObject("technician", technician);
-        mv.addObject("canEdit", canEdit);
-        return mv;
-    }
-
-    private ModelAndView doGarage(Garage garage, boolean canEdit) {
-        ModelAndView mv = new ModelAndView("garage");
-        mv.addObject("garage", garage);
         mv.addObject("canEdit", canEdit);
         return mv;
     }
@@ -131,17 +124,31 @@ public class ApplicationController {
     //<editor-fold desc="Actions">
     @RequestMapping(value = "saveUser", method = RequestMethod.POST)
     @Transactional
-    public ModelAndView saveUser(@ModelAttribute User user, BindingResult errors, HttpServletRequest request) {
+    public ModelAndView saveUser(@ModelAttribute User user, BindingResult errors, @RequestParam(required = false, defaultValue = "true") Boolean withSession, HttpServletRequest request) {
         user.validateUserForm(errors);
         if (errors.hasErrors()) {
-            return doUser(user, true);
+            return doUser(user, true, withSession != null && withSession, request);
         }
         boolean result = user.save();
         if (result) {
             SessionUtils.addProperty(request, ApplicationContants.SESSION_USERNAME, user.getUsername());
-            return new ModelAndView("redirect:menu");
+            return new ModelAndView("redirect:userLists");
         }
         return registerUser();
+    }
+
+    @RequestMapping(value = "saveTechnician", method = RequestMethod.POST)
+    @Transactional
+    public ModelAndView saveTechnician(@ModelAttribute Technician technician, BindingResult errors, HttpServletRequest request) {
+        technician.validateUserForm(errors);
+        if (errors.hasErrors()) {
+            return doTechnician(technician, true, request);
+        }
+        boolean result = technician.save();
+        if (result) {
+            return new ModelAndView("redirect:technician");
+        }
+        return registerTechnician(null);
     }
 
     @RequestMapping(value = "login", method = RequestMethod.POST)
@@ -153,13 +160,13 @@ public class ApplicationController {
             SessionUtils.addProperty(request, ApplicationContants.SESSION_USERNAME, username);
             return new ModelAndView("redirect:menu");
         }
-        return applicationIndex();
+        return applicationIndex(null);
     }
 
     @RequestMapping(value = "loggout", method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView loggout(HttpServletRequest request) {
         SessionUtils.removeProperty(request, ApplicationContants.SESSION_USERNAME);
-        return applicationIndex();
+        return applicationIndex(null);
     }
     //</editor-fold>
 }

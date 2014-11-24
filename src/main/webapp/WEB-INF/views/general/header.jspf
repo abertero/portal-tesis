@@ -1,6 +1,9 @@
 <head>
   <title><spring:message code="application.title"/>*</title>
+
   <link rel='stylesheet' href='${ctx}/static/css/bootstrap.min.css'>
   <link rel="stylesheet" href="${ctx}/static/css/bootstrap-theme.min.css"/>
+  <link rel="stylesheet" href="${ctx}/static/css/body.css"/>
+  <link href='http://fonts.googleapis.com/css?family=Terminal+Dosis' rel='stylesheet' type='text/css' />
   <script src="${ctx}/static/js/bootstrap.min.js"></script>
 </head>

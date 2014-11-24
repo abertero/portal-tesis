@@ -9,7 +9,7 @@
 <p><spring:message code="saleOrderList.detail"/></p>
 
 <div>
-  <table class="table table-bordered">
+  <table class="table table-hover">
     <tr>
       <th><spring:message code="saleOrderList.label.docNum"/></th>
       <th><spring:message code="saleOrderList.label.cardCode"/></th>
@@ -21,6 +21,11 @@
       <th><spring:message code="saleOrderList.label.color"/></th>
       <th><spring:message code="saleOrderList.label.action"/></th>
     </tr>
+    <c:if test="${empty salesOrder}">
+      <tr>
+        <td colspan="9"><spring:message code="saleOrderList.empty"/></td>
+      </tr>
+    </c:if>
     <c:forEach items="${salesOrder}" var="sale">
       <tr>
         <td><c:out value="${sale.docNum}"/></td>
@@ -35,7 +40,7 @@
           <a href="${ctx}/order/${sale.docNum}">
             <span class="glyphicon glyphicon-search"
                   title="<spring:message code="saleOrderList.label.viewOrder"/>"></span>
-          </a>
+          </a>&nbsp;|&nbsp;
           <a href="${ctx}/order/${sale.docNum}?canEdit=true">
             <span class="glyphicon glyphicon-edit"
                   title="<spring:message code="saleOrderList.label.editOrder"/>"></span>

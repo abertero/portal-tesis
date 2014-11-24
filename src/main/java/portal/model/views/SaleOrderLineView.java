@@ -7,14 +7,16 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = ApplicationContants.VIEW_NAME_ORDR_LIN)
-public class SaleOrderLineView {
+public class SaleOrderLineView implements Serializable {
     @Id
     @Column(name = "docnum")
     private Long docNum;
+    @Id
     @Column(name = "itemcode")
     private String itemCode;
     @Column(name = "description")
