@@ -6,106 +6,38 @@
 
 <h1><spring:message code="saleOrder.title"/></h1>
 
-<c:choose>
-  <c:when test="${canEdit}">
-    <form action="${ctx}/saveSaleOrder" method="post">
-      <div>
-        <div class="form-group">
-          <label class="col-xs-6 col-sm-2 control-label"><spring:message code="saleOrder.label.docNum"/></label>
-
-          <div class="col-xs-6 col-sm-4">
-            <input type="text" class="form-control" name="docNum" value="${saleOrder.docNum}"/>
-          </div>
-          <label class="col-xs-6 col-sm-2 control-label"><spring:message code="saleOrder.label.vehicle"/></label>
-
-          <div class="col-xs-6 col-sm-4">
-            <input type="text" class="form-control" name="name" value="${saleOrder.vehicle.name}"/>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-xs-6 col-sm-2 control-label"><spring:message code="saleOrder.label.cardCode"/></label>
-
-          <div class="col-xs-6 col-sm-4">
-            <input type="text" class="form-control" name="cardCode" value="${saleOrder.cardCode}"/>
-          </div>
-          <label class="col-xs-6 col-sm-2 control-label"><spring:message code="saleOrder.label.uAuAno"/></label>
-
-          <div class="col-xs-6 col-sm-4">
-            <input type="text" class="form-control" name="uAuAno" value="${saleOrder.uAuAno}"/>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-xs-6 col-sm-2 control-label"><spring:message code="saleOrder.label.cardName"/></label>
-
-          <div class="col-xs-6 col-sm-4">
-            <input type="text" class="form-control" name="cardName" value="${saleOrder.cardName}"/>
-          </div>
-          <label class="col-xs-6 col-sm-2 control-label"><spring:message code="saleOrder.label.uAuPatente"/></label>
-
-          <div class="col-xs-6 col-sm-4">
-            <input type="text" class="form-control" name="uAuPatente" value="${saleOrder.uAuPatente}"/>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-xs-6 col-sm-2 control-label"><spring:message code="saleOrder.label.docDate"/></label>
-
-          <div class="col-xs-6 col-sm-4">
-            <input type="text" class="form-control" name="docDate" value="${saleOrder.docDate}"/>
-          </div>
-          <label class="col-xs-6 col-sm-2 control-label"><spring:message code="saleOrder.label.uAuChasis"/></label>
-
-          <div class="col-xs-6 col-sm-4">
-            <input type="text" class="form-control" name="uAuChasis" value="${saleOrder.uAuChasis}"/>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-xs-6 col-sm-2 control-label"><spring:message code="saleOrder.label.color"/></label>
-
-          <div class="col-xs-6 col-sm-4">
-            <select name="color" id="color" class="form-control">
-              <option value=""><spring:message code="saleOrder.label.color.default"/></option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </form>
-  </c:when>
-  <c:otherwise>
-    <div>
-      <table class="table" id="saleOrderTable">
-        <tr>
-          <th><spring:message code="saleOrder.label.docNum"/></th>
-          <td><c:out value="${saleOrder.docNum}"/></td>
-          <th><spring:message code="saleOrder.label.vehicle"/></th>
-          <td><c:out value="${saleOrder.vehicle.name}"/></td>
-        </tr>
-        <tr>
-          <th><spring:message code="saleOrder.label.cardCode"/></th>
-          <td><c:out value="${saleOrder.cardCode}"/></td>
-          <th><spring:message code="saleOrder.label.uAuAno"/></th>
-          <td><c:out value="${saleOrder.uAuAno}"/></td>
-        </tr>
-        <tr>
-          <th><spring:message code="saleOrder.label.cardName"/></th>
-          <td><c:out value="${saleOrder.cardName}"/></td>
-          <th><spring:message code="saleOrder.label.uAuPatente"/></th>
-          <td><c:out value="${saleOrder.uAuPatente}"/></td>
-        </tr>
-        <tr>
-          <th><spring:message code="saleOrder.label.docDate"/></th>
-          <td><c:out value="${saleOrder.docDate}"/></td>
-          <th><spring:message code="saleOrder.label.uAuChasis"/></th>
-          <td><c:out value="${saleOrder.uAuChasis}"/></td>
-        </tr>
-        <tr>
-          <th><spring:message code="saleOrder.label.color"/></th>
-          <td colspan="3">&nbsp;</td>
-        </tr>
-      </table>
-    </div>
-  </c:otherwise>
-</c:choose>
-
+<div>
+  <table class="table" id="saleOrderTable">
+    <tr>
+      <th><spring:message code="saleOrder.label.docNum"/></th>
+      <td><c:out value="${saleOrder.headerView.docNum}"/></td>
+      <th><spring:message code="saleOrder.label.vehicle"/></th>
+      <td>&nbsp;<%--<c:out value="${saleOrder.vehicle.name}"/>--%></td>
+    </tr>
+    <tr>
+      <th><spring:message code="saleOrder.label.cardCode"/></th>
+      <td><c:out value="${saleOrder.headerView.cardCode}"/></td>
+      <th><spring:message code="saleOrder.label.uAuAno"/></th>
+      <td><c:out value="${saleOrder.headerView.uAuAno}"/></td>
+    </tr>
+    <tr>
+      <th><spring:message code="saleOrder.label.cardName"/></th>
+      <td><c:out value="${saleOrder.headerView.cardName}"/></td>
+      <th><spring:message code="saleOrder.label.uAuPatente"/></th>
+      <td><c:out value="${saleOrder.headerView.uAuPatente}"/></td>
+    </tr>
+    <tr>
+      <th><spring:message code="saleOrder.label.docDate"/></th>
+      <td><c:out value="${saleOrder.headerView.docDate}"/></td>
+      <th><spring:message code="saleOrder.label.uAuChasis"/></th>
+      <td><c:out value="${saleOrder.headerView.uAuChasis}"/></td>
+    </tr>
+    <tr>
+      <th><spring:message code="saleOrder.label.color"/></th>
+      <td colspan="3">&nbsp;</td>
+    </tr>
+  </table>
+</div>
 <div>
   <table class="table table-bordered">
     <tr>
@@ -116,12 +48,12 @@
       <th><spring:message code="saleOrder.label.totalComision"/></th>
       <th><spring:message code="saleOrder.label.whsCode"/></th>
     </tr>
-    <c:if test="${empty saleOrder.details}">
+    <c:if test="${empty saleOrder.headerLines}">
       <tr>
         <td colspan="6"><spring:message code="saleOrder.label.details.empty"/></td>
       </tr>
     </c:if>
-    <c:forEach items="${saleOrder.details}" var="detail">
+    <c:forEach items="${saleOrder.headerLines}" var="detail">
       <tr>
         <td><c:out value="${detail.itemCode}"/></td>
         <td><c:out value="${detail.description}"/></td>

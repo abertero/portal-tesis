@@ -27,14 +27,14 @@ public class ApplicationController {
     }
 
     private ModelAndView doMenu(HttpServletRequest request, String view) {
-        String username = SessionUtils.getProperty(request, ApplicationContants.SESSION_USERNAME);
-        ModelAndView mv;
-        if (StringUtils.isEmpty(username)) {
-            mv = new ModelAndView("home");
-        } else {
-            mv = new ModelAndView(view);
+        ModelAndView mv = new ModelAndView("home");
+        if (request != null) {
+            String username = SessionUtils.getProperty(request, ApplicationContants.SESSION_USERNAME);
+            if (!StringUtils.isEmpty(username)) {
+                mv = new ModelAndView(view);
+                mv.addObject("user", StringUtils.isNotEmpty(username) ? User.findByUsername(username) : new User());
+            }
         }
-        mv.addObject("user", StringUtils.isNotEmpty(username) ? User.findByUsername(username) : new User());
         return mv;
     }
 
@@ -94,7 +94,7 @@ public class ApplicationController {
 
     @RequestMapping(value = "order/{docNum}", method = RequestMethod.GET)
     public ModelAndView saleOrderDetail(@PathVariable Long docNum, @RequestParam(required = false, defaultValue = "false") Boolean canEdit, HttpServletRequest request) {
-        return doSaleOrder(SaleOrder.findByDocNum(docNum), canEdit, request);
+        return doSaleOrder(SaleOrder.findByDocNum(docNum, true), canEdit, request);
     }
 
     //<editor-fold desc="Model">

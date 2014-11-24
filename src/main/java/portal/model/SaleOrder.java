@@ -26,6 +26,11 @@ public class SaleOrder extends BaseEntity {
         this.idDocNum = idDocNum;
     }
 
+    @Override
+    protected String attributes() {
+        return super.attributes() + ", idDocNum: " + idDocNum;
+    }
+
     @Transient
     public SaleOrderHeaderView getHeaderView() {
         return headerView;
@@ -34,6 +39,13 @@ public class SaleOrder extends BaseEntity {
     @Transient
     public List<SaleOrderLineView> getHeaderLines() {
         return headerLines;
+    }
+
+    private void loadViews(boolean loadLines) {
+        headerView = SaleOrderHeaderView.findByDocNum(idDocNum);
+        if (loadLines) {
+            headerLines.addAll(SaleOrderLineView.findByDocNum(idDocNum));
+        }
     }
 
     public static SaleOrder findByDocNum(Long docNum) {
@@ -46,10 +58,7 @@ public class SaleOrder extends BaseEntity {
             order = new SaleOrder();
             order.idDocNum = docNum;
         }
-        order.headerView = SaleOrderHeaderView.findByDocNum(docNum);
-        if (loadLines) {
-            order.headerLines.addAll(SaleOrderLineView.findByDocNum(docNum));
-        }
+        order.loadViews(loadLines);
         return order;
     }
 }

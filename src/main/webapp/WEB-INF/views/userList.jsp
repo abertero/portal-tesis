@@ -23,9 +23,9 @@
         <td><c:out value="${user.lastName}"/></td>
         <td><c:out value="${user.email}"/></td>
         <td>
-          <a href="user/${user.altKey}"><span class="glyphicon glyphicon-search"
+          <a href="${ctx}/user/${user.altKey}"><span class="glyphicon glyphicon-search"
                                               title="<spring:message code="userList.action.view"/>"></span></a>&nbsp;|&nbsp;
-          <a href="user/${user.altKey}?canEdit=true"><span class="glyphicon glyphicon-edit"
+          <a href="${ctx}/user/${user.altKey}?canEdit=true"><span class="glyphicon glyphicon-edit"
                                                            title="<spring:message code="userList.action.edit"/>"></span></a>&nbsp;|&nbsp;
           <a href="#"><span class="glyphicon glyphicon-remove"
                             title="<spring:message code="userList.action.delete"/>"></span></a>
