@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * TODO: Puede que está entidad no sirva, ver taller mecánico, preguntar si se debe modificar algo ahi (en caso que no, se debe borrar esto).
+ */
 @Entity
 public class ParkingLot extends NamedBaseEntity {
     private String location;

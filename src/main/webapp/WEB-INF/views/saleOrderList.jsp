@@ -51,5 +51,16 @@
   </table>
 </div>
 
+<div style="float: right; margin-right: 100px;">
+  <c:if test="${currentPage > 0}">
+    <a href="${ctx}/order?currentPage=${currentPage-1}&numberOfPages=${numberOfPages}"><span
+        class="glyphicon glyphicon-chevron-left" title="Prev."></span></a>
+  </c:if>&nbsp;&nbsp;&nbsp;
+  <c:if test="${currentPage < numberOfPages-1}">
+    <a href="${ctx}/order?currentPage=${currentPage+1}&numberOfPages=${numberOfPages}"><span
+        class="glyphicon glyphicon-chevron-right" title="Next."></span></a>
+  </c:if>
+</div>
+
 </body>
 </html>

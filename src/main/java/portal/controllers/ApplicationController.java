@@ -7,10 +7,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import portal.config.ApplicationContants;
-import portal.model.ParkingLot;
 import portal.model.SaleOrder;
 import portal.model.Technician;
 import portal.model.user.User;
+import portal.model.views.MachineShopListView;
 import portal.model.views.SaleOrderHeaderView;
 import portal.utils.SessionUtils;
 
@@ -78,17 +78,21 @@ public class ApplicationController {
         return doTechnician(Technician.findByAltKey(altKeyTechnician), canEdit != null && canEdit, request);
     }
 
-    @RequestMapping(value = "parkingLot", method = RequestMethod.GET)
-    public ModelAndView parkingLotList(HttpServletRequest request) {
+    @RequestMapping(value = "parking", method = RequestMethod.GET)
+    public ModelAndView parkingLotList(@RequestParam(required = false, defaultValue = "0") Integer currentPage, @RequestParam(required = false) Integer numberOfPages, HttpServletRequest request) {
         ModelAndView mv = doMenu(request, "parkingLotList");
-        mv.addObject("parkingLots", ParkingLot.findAll());
+        mv.addObject("parkingLots", MachineShopListView.findAll(currentPage));
+        mv.addObject("currentPage", currentPage);
+        mv.addObject("numberOfPages", numberOfPages != null ? numberOfPages : MachineShopListView.findNumberOfPages());
         return mv;
     }
 
     @RequestMapping(value = "order", method = RequestMethod.GET)
-    public ModelAndView saleOrderList(HttpServletRequest request) {
+    public ModelAndView saleOrderList(@RequestParam(required = false, defaultValue = "0") Integer currentPage, @RequestParam(required = false) Integer numberOfPages, HttpServletRequest request) {
         ModelAndView mv = doMenu(request, "saleOrderList");
-        mv.addObject("salesOrder", SaleOrderHeaderView.findAll(0));
+        mv.addObject("salesOrder", SaleOrderHeaderView.findAll(currentPage));
+        mv.addObject("currentPage", currentPage);
+        mv.addObject("numberOfPages", numberOfPages != null ? numberOfPages : MachineShopListView.findNumberOfPages());
         return mv;
     }
 

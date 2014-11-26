@@ -15,9 +15,9 @@
 <ul>
   <li><a href="${ctx}/user"><spring:message code="menu.profileManager.name"/></a></li>
   <li><a href="${ctx}/technician"><spring:message code="menu.technicianManager.name"/></a></li>
-  <li><a href="${ctx}/order"><spring:message code="menu.garageList.name"/></a></li>
-  <li><a href="${ctx}/parking"><spring:message code="menu.parkingInfo.name"/></a></li>
   <li><a href="${ctx}/order"><spring:message code="menu.saleOrderList.name"/></a></li>
+  <li><a href="${ctx}/parking"><spring:message code="menu.parkingInfo.name"/></a></li>
+  <li><a href="${ctx}/order"><spring:message code="menu.reports.name"/></a></li>
 </ul>
 -->
 <!-- INICIO -->
@@ -31,7 +31,7 @@
           <span class="ca-icon">U</span>
           <div class="ca-content">
             <h2 class="ca-main"><spring:message code="menu.profileManager.name"/></h2>
-            <h3 class="ca-sub">Descripci&oacute;n de opci&oacute;n</h3>
+            <h3 class="ca-sub"><spring:message code="menu.profileManager.description"/></h3>
           </div>
         </a>
       </li>
@@ -40,7 +40,7 @@
           <span class="ca-icon">S</span>
           <div class="ca-content">
             <h2 class="ca-main"><spring:message code="menu.technicianManager.name"/></h2>
-            <h3 class="ca-sub">Descripci&oacute;n de opci&oacute;n</h3>
+            <h3 class="ca-sub"><spring:message code="menu.technicianManager.description"/></h3>
           </div>
         </a>
       </li>
@@ -48,8 +48,8 @@
         <a href="${ctx}/order">
           <span class="ca-icon">F</span>
           <div class="ca-content">
-            <h2 class="ca-main"><spring:message code="menu.garageList.name"/></h2>
-            <h3 class="ca-sub">Descripci&oacute;n de opci&oacute;n</h3>
+            <h2 class="ca-main"><spring:message code="menu.saleOrderList.name"/></h2>
+            <h3 class="ca-sub"><spring:message code="menu.saleOrderList.description"/></h3>
           </div>
         </a>
       </li>
@@ -58,7 +58,7 @@
           <span class="ca-icon">F</span>
           <div class="ca-content">
             <h2 class="ca-main"><spring:message code="menu.parkingInfo.name"/></h2>
-            <h3 class="ca-sub">Descripci&oacute;n de opci&oacute;n</h3>
+            <h3 class="ca-sub"><spring:message code="menu.parkingInfo.description"/></h3>
           </div>
         </a>
       </li>
@@ -66,8 +66,8 @@
         <a href="${ctx}/order">
           <span class="ca-icon">L</span>
           <div class="ca-content">
-            <h2 class="ca-main"><spring:message code="menu.saleOrderList.name"/></h2>
-            <h3 class="ca-sub">Descripci&oacute;n de opci&oacute;n</h3>
+            <h2 class="ca-main"><spring:message code="menu.reports.name"/></h2>
+            <h3 class="ca-sub"><spring:message code="menu.reports.description"/></h3>
           </div>
         </a>
       </li>

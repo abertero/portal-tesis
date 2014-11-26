@@ -15,10 +15,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Root;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class JPA {
@@ -247,7 +244,12 @@ public class JPA {
     public static <T> List<T> pageQuery(String query, Class clazz, int page) {
         TypedQuery<T> typedQuery = JPA.em().createQuery(query, clazz);
         typedQuery.setMaxResults(ApplicationContants.JPA_MAX_RESULTS);
-        typedQuery.setFirstResult(page);
+        typedQuery.setFirstResult(page * ApplicationContants.JPA_MAX_RESULTS);
         return typedQuery.getResultList();
+    }
+
+    public static int numberOfPages(Class entityClazz) {
+        Number res = JPA.querySingle("SELECT COUNT(o) FROM " + entityClazz.getName() + " o");
+        return res != null ? (int) Math.ceil(res.doubleValue() / ApplicationContants.JPA_MAX_RESULTS) : 0;
     }
 }
