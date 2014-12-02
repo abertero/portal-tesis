@@ -8,7 +8,8 @@
   <table class="table table-striped">
     <thead>
     <tr>
-      <th><spring:message code="technician.firstName"/></th>
+      <th><spring:message code="technician.codigo"/></th>
+        <th><spring:message code="technician.firstName"/></th>
       <th><spring:message code="technician.lastName"/></th>
       <th><spring:message code="technician.accion"/></th>
     </tr>
@@ -17,16 +18,19 @@
     <c:forEach var="technician" items="${technicians}">
       <tr>
 
+        <td><c:out value="${technician.code}"/></td>
         <td><c:out value="${technician.firstName}"/></td>
         <td><c:out value="${technician.lastName}"/></td>
-        <td><a href="manager/technician/<c:out value="${technician.altKey}"/>">Editar</a>&nbsp;|&nbsp;<a href="#">Eliminar</a> </td>
+        <td><a href="technician/<c:out value="${technician.altKey}"/>?canEdit=true">Editar</a>&nbsp;|&nbsp;<a href="#">Eliminar</a>
+        </td>
       </tr>
     </c:forEach>
-
     </tbody>
   </table>
-
-  <a class="btn btn-primary" href="registerTechnician">Crear</a>
+  <c:url var="registerUrl" value="/registerTechnician">
+    <c:param name="backUrl" value="${ctx}/technician"/>
+  </c:url>
+  <a class="btn btn-primary" href="${registerUrl}"><spring:message code="technician.create"/></a>
   <a class="btn btn-primary" href="menu">Volver</a>
 </div>
 </body>

@@ -35,8 +35,10 @@
 
     </tbody>
   </table>
-
-  <a class="btn btn-primary" href="register">Crear</a>
+  <c:url var="registerUrl" value="/registerUser">
+    <c:param name="backUrl" value="${ctx}/user"/>
+  </c:url>
+  <a class="btn btn-primary" href="${registerUrl}"><spring:message code="register.create"/></a>
   <a class="btn btn-primary" href="menu">Volver</a>
 </div>
 </body>

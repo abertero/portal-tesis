@@ -120,6 +120,6 @@ public class SaleOrderHeaderView {
     }
 
     public static SaleOrderHeaderView findByDocNum(Long docNum) {
-        return JPA.em().find(SaleOrderHeaderView.class, docNum);
+        return JPA.queryFirst("SELECT hv FROM SaleOrderHeaderView hv WHERE hv.docNum = ?1", docNum);
     }
 }

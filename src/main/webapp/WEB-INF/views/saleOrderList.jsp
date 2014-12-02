@@ -37,11 +37,18 @@
         <td><c:out value="${sale.uAuChasis}"/></td>
         <td><c:out value="${sale.color}"/></td>
         <td>
-          <a href="${ctx}/order/${sale.docNum}">
+          <c:url var="viewSaleOrder" value="order/${sale.docNum}">
+            <c:param name="backUrl" value="${ctx}/order?currentPage=${currentPage+1}&numberOfPages=${numberOfPages}"/>
+          </c:url>
+          <c:url var="editSaleOrder" value="order/${sale.docNum}">
+            <c:param name="backUrl" value="${ctx}/order?currentPage=${currentPage+1}&numberOfPages=${numberOfPages}"/>
+            <c:param name="canEdit" value="true"/>
+          </c:url>
+          <a href="${viewSaleOrder}">
             <span class="glyphicon glyphicon-search"
                   title="<spring:message code="saleOrderList.label.viewOrder"/>"></span>
           </a>&nbsp;|&nbsp;
-          <a href="${ctx}/order/${sale.docNum}?canEdit=true">
+          <a href="${editSaleOrder}">
             <span class="glyphicon glyphicon-edit"
                   title="<spring:message code="saleOrderList.label.editOrder"/>"></span>
           </a>
@@ -51,15 +58,25 @@
   </table>
 </div>
 
-<div style="float: right; margin-right: 100px;">
-  <c:if test="${currentPage > 0}">
-    <a href="${ctx}/order?currentPage=${currentPage-1}&numberOfPages=${numberOfPages}"><span
-        class="glyphicon glyphicon-chevron-left" title="Prev."></span></a>
-  </c:if>&nbsp;&nbsp;&nbsp;
-  <c:if test="${currentPage < numberOfPages-1}">
-    <a href="${ctx}/order?currentPage=${currentPage+1}&numberOfPages=${numberOfPages}"><span
-        class="glyphicon glyphicon-chevron-right" title="Next."></span></a>
-  </c:if>
+<div class="form-group">
+  <div class="col-xs-12 col-sm-2 col-sm-offset-10">
+    <c:if test="${currentPage > 0}">
+      <a href="${ctx}/order?currentPage=${currentPage-1}&numberOfPages=${numberOfPages}"><span
+          class="glyphicon glyphicon-chevron-left" title="Prev."></span></a>
+    </c:if>&nbsp;&nbsp;&nbsp;<c:out value="${currentPage+1}"/> / <c:out value="${numberOfPages}"/>&nbsp;&nbsp;&nbsp;
+    <c:if test="${currentPage < numberOfPages-1}">
+      <a href="${ctx}/order?currentPage=${currentPage+1}&numberOfPages=${numberOfPages}"><span
+          class="glyphicon glyphicon-chevron-right" title="Next."></span></a>
+    </c:if>
+  </div>
+  <div class="col-xs-12 col-sm-2 col-sm-offset-10">
+    <c:choose>
+      <c:when test="${not empty backUrl}"><a href="${backUrl}" class="btn btn-default"><spring:message
+          code="application.back"/></a></c:when>
+      <c:otherwise><a href="${ctx}/menu" class="btn btn-default"><spring:message
+          code="application.back"/></a></c:otherwise>
+    </c:choose>
+  </div>
 </div>
 
 </body>

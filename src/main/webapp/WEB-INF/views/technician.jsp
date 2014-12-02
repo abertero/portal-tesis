@@ -8,8 +8,16 @@
 <c:choose>
   <c:when test="${canEdit}">
     <form action="${ctx}/saveTechnician" method="post">
+      <input type="hidden" name="id" value="${technician.id}"/>
       <div class="form-horizontal">
 
+        <div class="form-group">
+          <label class="col-xs-12 col-sm-2 control-label" for="firstName"><spring:message code="technician.codigo"/></label>
+
+          <div class="col-xs-12 col-sm-9">
+            <input type="text" class="form-control" name="code" id="code" value="${technician.code}"/>
+          </div>
+        </div>
         <div class="form-group">
           <label class="col-xs-12 col-sm-2 control-label" for="firstName"><spring:message code="technician.firstName"/></label>
 

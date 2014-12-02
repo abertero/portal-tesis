@@ -19,7 +19,7 @@ public class SaleOrderLineView implements Serializable {
     @Id
     @Column(name = "itemcode")
     private String itemCode;
-    @Column(name = "description")
+    @Column(name = "dscription")
     private String description;
     @Column(name = "quantity")
     private Integer quantity;

@@ -15,24 +15,27 @@ import portal.model.views.SaleOrderHeaderView;
 import portal.utils.SessionUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 @RequestMapping("/")
 public class ApplicationController {
 
+    //<editor-fold desc="Views">
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView applicationIndex(HttpServletRequest request) {
-        ModelAndView mv = doMenu(request, "redirect:menu");
+        ModelAndView mv = doMenu(request, "redirect:menu", null);
         return mv;
     }
 
-    private ModelAndView doMenu(HttpServletRequest request, String view) {
+    private ModelAndView doMenu(HttpServletRequest request, String view, String backUrl) {
         ModelAndView mv = new ModelAndView("home");
         if (request != null) {
             String username = SessionUtils.getProperty(request, ApplicationContants.SESSION_USERNAME);
             if (!StringUtils.isEmpty(username)) {
                 mv = new ModelAndView(view);
                 mv.addObject("user", StringUtils.isNotEmpty(username) ? User.findByUsername(username) : new User());
+                mv.addObject("backUrl", backUrl);
             }
         }
         return mv;
@@ -40,47 +43,50 @@ public class ApplicationController {
 
     @RequestMapping(value = "menu", method = RequestMethod.GET)
     public ModelAndView mainMenu(HttpServletRequest request) {
-        ModelAndView mv = doMenu(request, "mainMenu");
+        ModelAndView mv = doMenu(request, "mainMenu", null);
         return mv;
     }
 
-    @RequestMapping(value = "register", method = RequestMethod.GET)
-    public ModelAndView registerUser() {
-        return doUser(new User(), true, false, null);
+    @RequestMapping(value = "registerUser", method = RequestMethod.GET)
+    public ModelAndView registerUser(@RequestParam(required = false) String backUrl, HttpServletRequest request) {
+        return doUser(new User(), true, backUrl, request);
     }
 
     @RequestMapping(value = "user", method = RequestMethod.GET)
-    public ModelAndView userList(HttpServletRequest request) {
-        ModelAndView mv = doMenu(request, "userList");
+    public ModelAndView userList(@RequestParam(required = false) String backUrl, HttpServletRequest request) {
+        ModelAndView mv = doMenu(request, "userList", backUrl);
         mv.addObject("users", User.findAll());
         return mv;
     }
 
     @RequestMapping(value = "user/{altKeyUser}", method = RequestMethod.GET)
-    public ModelAndView userDetail(@PathVariable String altKeyUser, @RequestParam(required = false, defaultValue = "false") Boolean canEdit, HttpServletRequest request) {
-        return doUser(User.findByAltKey(altKeyUser), canEdit != null && canEdit, true, request);
+    public ModelAndView userDetail(@PathVariable String altKeyUser, @RequestParam(required = false, defaultValue = "false") Boolean canEdit,
+                                   @RequestParam(required = false) String backUrl, HttpServletRequest request) {
+        return doUser(User.findByAltKey(altKeyUser), canEdit != null && canEdit, backUrl, request);
     }
 
     @RequestMapping(value = "registerTechnician", method = RequestMethod.GET)
-    public ModelAndView registerTechnician(HttpServletRequest request) {
-        return doTechnician(new Technician(), true, request);
+    public ModelAndView registerTechnician(@RequestParam(required = false) String backUrl, HttpServletRequest request) {
+        return doTechnician(new Technician(), true, backUrl, request);
     }
 
     @RequestMapping(value = "technician", method = RequestMethod.GET)
-    public ModelAndView technicianList(HttpServletRequest request) {
-        ModelAndView mv = doMenu(request, "technicianList");
+    public ModelAndView technicianList(@RequestParam(required = false) String backUrl, HttpServletRequest request) {
+        ModelAndView mv = doMenu(request, "technicianList", backUrl);
         mv.addObject("technicians", Technician.findAll());
         return mv;
     }
 
-    @RequestMapping(value = "manager/technician/{altKeyTechnician}", method = RequestMethod.GET)
-    public ModelAndView technicianDetail(@PathVariable String altKeyTechnician, @RequestParam(required = false, defaultValue = "false") Boolean canEdit, HttpServletRequest request) {
-        return doTechnician(Technician.findByAltKey(altKeyTechnician), canEdit != null && canEdit, request);
+    @RequestMapping(value = "technician/{altKeyTechnician}", method = RequestMethod.GET)
+    public ModelAndView technicianDetail(@PathVariable String altKeyTechnician, @RequestParam(required = false, defaultValue = "false") Boolean canEdit,
+                                         @RequestParam(required = false) String backUrl, HttpServletRequest request) {
+        return doTechnician(Technician.findByAltKey(altKeyTechnician), canEdit != null && canEdit, backUrl, request);
     }
 
     @RequestMapping(value = "parking", method = RequestMethod.GET)
-    public ModelAndView parkingLotList(@RequestParam(required = false, defaultValue = "0") Integer currentPage, @RequestParam(required = false) Integer numberOfPages, HttpServletRequest request) {
-        ModelAndView mv = doMenu(request, "parkingLotList");
+    public ModelAndView parkingLotList(@RequestParam(required = false, defaultValue = "0") Integer currentPage, @RequestParam(required = false) Integer numberOfPages,
+                                       @RequestParam(required = false) String backUrl, HttpServletRequest request) {
+        ModelAndView mv = doMenu(request, "parkingLotList", backUrl);
         mv.addObject("parkingLots", MachineShopListView.findAll(currentPage));
         mv.addObject("currentPage", currentPage);
         mv.addObject("numberOfPages", numberOfPages != null ? numberOfPages : MachineShopListView.findNumberOfPages());
@@ -88,8 +94,9 @@ public class ApplicationController {
     }
 
     @RequestMapping(value = "order", method = RequestMethod.GET)
-    public ModelAndView saleOrderList(@RequestParam(required = false, defaultValue = "0") Integer currentPage, @RequestParam(required = false) Integer numberOfPages, HttpServletRequest request) {
-        ModelAndView mv = doMenu(request, "saleOrderList");
+    public ModelAndView saleOrderList(@RequestParam(required = false, defaultValue = "0") Integer currentPage, @RequestParam(required = false) Integer numberOfPages,
+                                      @RequestParam(required = false) String backUrl, HttpServletRequest request) {
+        ModelAndView mv = doMenu(request, "saleOrderList", backUrl);
         mv.addObject("salesOrder", SaleOrderHeaderView.findAll(currentPage));
         mv.addObject("currentPage", currentPage);
         mv.addObject("numberOfPages", numberOfPages != null ? numberOfPages : MachineShopListView.findNumberOfPages());
@@ -97,62 +104,113 @@ public class ApplicationController {
     }
 
     @RequestMapping(value = "order/{docNum}", method = RequestMethod.GET)
-    public ModelAndView saleOrderDetail(@PathVariable Long docNum, @RequestParam(required = false, defaultValue = "false") Boolean canEdit, HttpServletRequest request) {
-        return doSaleOrder(SaleOrder.findByDocNum(docNum, true), canEdit, request);
+    public ModelAndView saleOrderDetail(@PathVariable Long docNum, @RequestParam(required = false, defaultValue = "false") Boolean canEdit,
+                                        @RequestParam(required = false) String backUrl, HttpServletRequest request) {
+        return doSaleOrder(SaleOrder.findByDocNum(docNum, true), canEdit, backUrl, request);
     }
 
+    @RequestMapping(value = "reports", method = RequestMethod.GET)
+    public ModelAndView reports(@RequestParam(required = false) String backUrl, HttpServletRequest request) {
+        return doMenu(request, "reports", backUrl);
+    }
+    //</editor-fold>
+
     //<editor-fold desc="Model">
-    private ModelAndView doUser(User user, boolean canEdit, boolean withSession, HttpServletRequest request) {
-        ModelAndView mv = withSession ? doMenu(request, "user") : new ModelAndView("user");
+    private ModelAndView doUser(User user, boolean canEdit, String backUrl, HttpServletRequest request) {
+        ModelAndView mv = doMenu(request, "user", backUrl);
         mv.addObject("user", user);
         mv.addObject("canEdit", canEdit);
-        mv.addObject("withSession", withSession);
         return mv;
     }
 
-    private ModelAndView doTechnician(Technician technician, boolean canEdit, HttpServletRequest request) {
-        ModelAndView mv = doMenu(request, "technician");
+    private ModelAndView doTechnician(Technician technician, boolean canEdit, String backUrl, HttpServletRequest request) {
+        ModelAndView mv = doMenu(request, "technician", backUrl);
         mv.addObject("technician", technician);
         mv.addObject("canEdit", canEdit);
         return mv;
     }
 
-    private ModelAndView doSaleOrder(SaleOrder saleOrder, boolean canEdit, HttpServletRequest request) {
-        ModelAndView mv = doMenu(request, "saleOrder");
+    private ModelAndView doSaleOrder(SaleOrder saleOrder, boolean canEdit, String backUrl, HttpServletRequest request) {
+        ModelAndView mv = doMenu(request, "saleOrder", backUrl);
         mv.addObject("saleOrder", saleOrder);
         mv.addObject("canEdit", canEdit);
         return mv;
+    }
+
+    @RequestMapping(value = "findTechnicianByCode", method = {RequestMethod.GET, RequestMethod.POST})
+    public
+    @ResponseBody
+    List<Technician> findByCode(@RequestParam String code) {
+        return Technician.findByCode(code);
     }
     //</editor-fold>
 
     //<editor-fold desc="Actions">
     @RequestMapping(value = "saveUser", method = RequestMethod.POST)
     @Transactional
-    public ModelAndView saveUser(@ModelAttribute User user, BindingResult errors, @RequestParam(required = false, defaultValue = "true") Boolean withSession, HttpServletRequest request) {
+    public ModelAndView saveUser(@ModelAttribute User user, BindingResult errors,
+                                 @RequestParam(required = false) String backUrl, HttpServletRequest request) {
         user.validateUserForm(errors);
         if (errors.hasErrors()) {
-            return doUser(user, true, withSession != null && withSession, request);
+            return doUser(user, true, backUrl, request);
         }
-        boolean result = user.save();
+        User userDB;
+        if (user.getId() != null) {
+            userDB = User.findById(user.getId());
+            userDB.getData(user);
+        } else {
+            userDB = user;
+        }
+        boolean result = userDB.save();
         if (result) {
             SessionUtils.addProperty(request, ApplicationContants.SESSION_USERNAME, user.getUsername());
-            return new ModelAndView("redirect:userLists");
+            return new ModelAndView("redirect:user");
         }
-        return registerUser();
+        return new ModelAndView("redirect:registerUser");
     }
 
     @RequestMapping(value = "saveTechnician", method = RequestMethod.POST)
     @Transactional
-    public ModelAndView saveTechnician(@ModelAttribute Technician technician, BindingResult errors, HttpServletRequest request) {
-        technician.validateUserForm(errors);
+    public ModelAndView saveTechnician(@ModelAttribute Technician technician, BindingResult errors,
+                                       @RequestParam(required = false) String backUrl, HttpServletRequest request) {
+        technician.validateTechnicianForm(errors);
         if (errors.hasErrors()) {
-            return doTechnician(technician, true, request);
+            return doTechnician(technician, true, backUrl, request);
         }
-        boolean result = technician.save();
+        Technician technicianDB;
+        if (technician.getId() != null) {
+            technicianDB = Technician.findById(technician.getId());
+            technicianDB.getData(technician);
+        } else {
+            technicianDB = technician;
+        }
+        boolean result = technicianDB.save();
         if (result) {
             return new ModelAndView("redirect:technician");
         }
-        return registerTechnician(null);
+        return new ModelAndView("redirect:registerTechnician");
+    }
+
+    @RequestMapping(value = "saveOrder", method = RequestMethod.POST)
+    @Transactional
+    public ModelAndView saveOrder(@ModelAttribute SaleOrder saleOrder, BindingResult errors, @RequestParam(required = false) Long[] idTechnicians,
+                                  @RequestParam(required = false) String backUrl, HttpServletRequest request) {
+        saleOrder.validateSaleOrderForm(errors);
+        if (errors.hasErrors()) {
+            return doSaleOrder(saleOrder, true, backUrl, request);
+        }
+        SaleOrder saleOrderDB;
+        if (saleOrder.getId() != null) {
+            saleOrderDB = SaleOrder.findById(saleOrder.getId());
+            saleOrderDB.getData(saleOrder);
+        } else {
+            saleOrderDB = saleOrder;
+        }
+        boolean result = saleOrderDB.saveWithTechnicians(idTechnicians);
+        if (result) {
+            return new ModelAndView("redirect:order");
+        }
+        return doSaleOrder(saleOrder, true, backUrl, request);
     }
 
     @RequestMapping(value = "login", method = RequestMethod.POST)

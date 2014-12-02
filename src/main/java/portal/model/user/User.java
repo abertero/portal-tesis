@@ -106,16 +106,26 @@ public class User extends BaseEntity {
     public boolean save() {
         try {
             JPA.em().persist(this);
-            logger.info("Added user " + toString());
+            logger.info("Modified user " + toString());
             return true;
         } catch (Exception e) {
-            logger.error("Excepcion creando usuario", e);
+            logger.error("Exception modifying usuario", e);
         }
         return false;
     }
 
     public void validateUserForm(BindingResult errors) {
 
+    }
+
+    public void getData(User user) {
+        this.address = user.getAddress();
+        this.email = user.getEmail();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.password = user.getPassword();
+        this.phone = user.getPhone();
+        this.username = user.getUsername();
     }
 
     @Transient

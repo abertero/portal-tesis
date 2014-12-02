@@ -10,7 +10,6 @@
   <c:choose>
     <c:when test="${canEdit}">
       <form action="${ctx}/saveUser" method="post">
-        <input type="hidden" name="withSession" value="${withSession}"/>
         <input type="hidden" name="id" value="${user.id}"/>
 
         <div class="form-horizontal">
@@ -78,6 +77,7 @@
           </div>
         </div>
         <input type="submit" class="btn btn-primary" value="<spring:message code="register.submit"/>"/>
+        <input type="button" class="btn btn-primary" value="Volver" onclick="javascript:history.back()">
       </form>
     </c:when>
     <c:otherwise>
