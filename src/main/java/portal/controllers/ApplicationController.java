@@ -207,7 +207,7 @@ public class ApplicationController {
 
     @RequestMapping(value = "saveOrder", method = RequestMethod.POST)
     @Transactional
-    public ModelAndView saveOrder(@ModelAttribute SaleOrder saleOrder, BindingResult errors, @RequestParam(required = false) Long[] idTechnicians,
+    public ModelAndView saveOrder(@ModelAttribute SaleOrder saleOrder, BindingResult errors, @RequestParam(required = false) Long[] idTechnicians, @RequestParam(required = false, defaultValue = "0.0") Double comission,
                                   @RequestParam(required = false) String backUrl, HttpServletRequest request) {
         saleOrder.validateSaleOrderForm(errors);
         if (errors.hasErrors()) {
@@ -220,7 +220,7 @@ public class ApplicationController {
             saleOrderDB = saleOrder;
         }
         saleOrderDB.getData(saleOrder);
-        boolean result = saleOrderDB.saveWithTechnicians(idTechnicians);
+        boolean result = saleOrderDB.saveWithTechnicians(idTechnicians, comission);
         if (result) {
             ModelAndView mv = new ModelAndView();
             mv.setView(new RedirectView(StringUtils.defaultString(backUrl, request.getContextPath() + "/order"), false));

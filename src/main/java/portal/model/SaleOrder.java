@@ -23,11 +23,8 @@ public class SaleOrder extends BaseEntity {
     private List<SaleOrderLineView> headerLines = new ArrayList<>();
     private Integer parking;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "sale_order_technician",
-            joinColumns = {@JoinColumn(name = "id_sale_order", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "id_technician", referencedColumnName = "id")})
-    private List<Technician> technicians = new ArrayList<>();
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "saleOrder", cascade = CascadeType.REFRESH)
+    private List<SaleOrderTechnician> technicians = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
     private SaleOrderStatus status;
@@ -43,11 +40,11 @@ public class SaleOrder extends BaseEntity {
         this.idDocNum = idDocNum;
     }
 
-    public List<Technician> getTechnicians() {
+    public List<SaleOrderTechnician> getTechnicians() {
         return technicians;
     }
 
-    public void setTechnicians(List<Technician> technicians) {
+    public void setTechnicians(List<SaleOrderTechnician> technicians) {
         this.technicians = technicians;
     }
 
@@ -92,10 +89,13 @@ public class SaleOrder extends BaseEntity {
         return super.attributes() + ", idDocNum: " + idDocNum + ", parking: " + parking + ", status: " + (status != null ? status.getName() : "S/I");
     }
 
-    public boolean saveWithTechnicians(Long[] idTechnicians) {
+    public boolean saveWithTechnicians(Long[] idTechnicians, Double comission) {
+        technicians.clear();
         if (idTechnicians != null) {
-            technicians.clear();
-            technicians.addAll(Technician.findbyIds(idTechnicians));
+            for (Technician technician : Technician.findbyIds(idTechnicians)) {
+                SaleOrderTechnician saleOrderTechnician = new SaleOrderTechnician(this, technician, comission);
+                technicians.add(saleOrderTechnician);
+            }
         }
         boolean result = save();
         if (result) {

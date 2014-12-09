@@ -60,8 +60,8 @@ public class SaleOrderLog extends BaseEntity {
     private static String makeStatus(SaleOrder saleOrder) {
         String result = "Técnicos: ";
         List<String> technicianNames = new ArrayList<>();
-        for (Technician technician : saleOrder.getTechnicians()) {
-            technicianNames.add(technician.getFullName());
+        for (SaleOrderTechnician saleOrderTechnician : saleOrder.getTechnicians()) {
+            technicianNames.add(saleOrderTechnician.getTechnician().getFullName() + " (Comisión $" + (saleOrderTechnician.getComission() != null ? saleOrderTechnician.getComission() : 0d) + ")");
         }
         result += (technicianNames.isEmpty() ? "S/T" : StringUtils.join(technicianNames.toArray(), ", ")) + "\n";
         result += "Estacionamiento: " + (saleOrder.getParking() != null ? "N/D" : saleOrder.getParking()) + "\n";

@@ -65,10 +65,14 @@
         <td><c:out value="${detail.description}"/></td>
         <td><c:out value="${detail.quantity}"/></td>
         <td><c:out value="${detail.uAuComision}"/></td>
-        <td class="suma"><c:out value="${detail.totalComision}"/></td>
+        <td><span class="suma"><c:out value="${detail.totalComision}"/></span></td>
         <td><c:out value="${detail.whsCode}"/></td>
       </tr>
     </c:forEach>
+    <tr>
+      <th colspan="4">Total</th>
+      <th colspan="2"><span class="totalSuma">0</span></th>
+    </tr>
   </table>
 </div>
 so p
@@ -79,6 +83,7 @@ so p
         <input type="hidden" name="backUrl" value="${backUrl}"/>
         <input type="hidden" name="id" value="${saleOrder.id}"/>
         <input type="hidden" name="idDocNum" value="${saleOrder.idDocNum}"/>
+        <input type="hidden" name="comission" class="comission" value="0"/>
 
         <div class="form-group">
           <label class="control-label col-xs-12 col-sm-2"><spring:message code="saleOrder.label.parking"/></label>
@@ -96,9 +101,12 @@ so p
               <c:if test="${not empty saleOrder.technicians}">
                 <ul>
                   <c:forEach items="${saleOrder.technicians}" var="tech">
-                    <li class="liTech${tech.id}"><span><input type="hidden" name="idTechnicians" value="${tech.id}"/>
-                      <c:out value="${tech.fullName}"/>
-                      <a href="javascript:void(0);" class="deleteTechnician" data-id-technician="${tech.id}">
+                    <li class="liTechnicians liTech${tech.technician.id}"><span><input type="hidden"
+                                                                                       name="idTechnicians"
+                                                                                       value="${tech.technician.id}"/>
+                      <c:out value="${tech.technician.fullName}"/>&nbsp;$<span
+                          class="comission">${tech.comission}</span>
+                      <a href="javascript:void(0);" class="deleteTechnician">
                         <span class="glyphicon glyphicon-remove"
                               title="<spring:message code="saleOrder.label.technicians.remove"/>"></span></a></span>
                     </li>
@@ -147,7 +155,8 @@ so p
           <c:if test="${not empty saleOrder.technicians}">
             <ul>
               <c:forEach items="${saleOrder.technicians}" var="tech">
-                <li class="liTech${tech.id}"><c:out value="${tech.fullName}"/></li>
+                <li class="liTechnicians liTech${tech.technician.id}"><c:out value="${tech.technician.fullName}"/>&nbsp;$<span
+                    class="comission"><c:out value="${tech.comission}"/></span></li>
               </c:forEach>
             </ul>
           </c:if>
@@ -180,29 +189,46 @@ so p
         return false;
       }
     });
+
+    deleteTechnician();
+    sumaTotalComision();
+    calcularComision();
   });
 
   function callback(obj) {
-    var html = '<li class="liTech' + obj.id + '"><span><input type="hidden" name="idTechnicians" value="' + obj.id + '"/>' + obj.code + ' - ' + obj.firstName + ' ' + obj.lastName
-        + ' <a href="javascript:void(0);" class="deleteTechnician" data-id-technician="' + obj.id + '"><span class="glyphicon glyphicon-remove" title="<spring:message code="saleOrder.label.technicians.remove"/>"></span></a></span></li>'
+    var html = '<li class="liTechnicians liTech' + obj.id + '"><span><input type="hidden" name="idTechnicians" value="' + obj.id + '"/>'
+        + obj.code + ' - ' + obj.firstName + ' ' + obj.lastName + ' $<span class="comission">0</span>'
+        + ' <a href="javascript:void(0);" class="deleteTechnician" data-id-technician="' + obj.id +
+        '"><span class="glyphicon glyphicon-remove" title="<spring:message code="saleOrder.label.technicians.remove"/>"></span></a></span></li>'
     if ($("span#technicians ul li.liTech" + obj.id).length == 0) {
       if ($("span#technicians ul").length > 0) {
         $("span#technicians ul").append(html);
       } else {
         $("span#technicians").append("<ul>" + html + "</ul>");
       }
+      calcularComision();
     }
   }
   function sumaTotalComision() {
-    importe_total = 0
-    $(".suma").each(
+    var importeTotal = 0
+    $("span.suma").each(
         function (index, value) {
-          importe_total = importe_total + parseInt($(this).text());
-
+          importeTotal = importeTotal + parseInt($(this).text());
         }
     );
-    alert(importe_total);
-    //$("#total").val(importe_total);
+    $("span.totalSuma").text(importeTotal);
+  }
+
+  function calcularComision() {
+    var importeTotal = parseInt($("span.totalSuma").text());
+    var totalTecnicos = $("li.liTechnicians").size();
+    var totalXTecnico = totalTecnicos > 0 ? Math.round(importeTotal * 100 / totalTecnicos) / 100 : 0;
+    $("input.comission").val(totalXTecnico)
+    $("span.comission").text(totalXTecnico)
+  }
+
+  function deleteTechnician() {
+    $("a.deleteTechnician").closest("li").remove();
   }
 </script>
 </body>

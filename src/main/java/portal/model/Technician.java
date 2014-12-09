@@ -8,8 +8,10 @@ import portal.config.JPA;
 import portal.model.base.BaseEntity;
 
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -22,6 +24,8 @@ public class Technician extends BaseEntity implements Serializable {
     private String firstName;
     private String lastName;
 
+    @OneToMany(mappedBy = "technician")
+    private List<SaleOrderTechnician> comissions =  new ArrayList<>();
 
     //<editor-fold desc="Getters and setters">
 
