@@ -6,8 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 import portal.config.ApplicationContants;
 import portal.model.SaleOrder;
+import portal.model.SaleOrderStatus;
 import portal.model.Technician;
 import portal.model.user.User;
 import portal.model.views.MachineShopListView;
@@ -83,14 +85,19 @@ public class ApplicationController {
         return doTechnician(Technician.findByAltKey(altKeyTechnician), canEdit != null && canEdit, backUrl, request);
     }
 
-    @RequestMapping(value = "parking", method = RequestMethod.GET)
-    public ModelAndView parkingLotList(@RequestParam(required = false, defaultValue = "0") Integer currentPage, @RequestParam(required = false) Integer numberOfPages,
-                                       @RequestParam(required = false) String backUrl, HttpServletRequest request) {
-        ModelAndView mv = doMenu(request, "parkingLotList", backUrl);
-        mv.addObject("parkingLots", MachineShopListView.findAll(currentPage));
+    @RequestMapping(value = "machineShop", method = RequestMethod.GET)
+    public ModelAndView machineShopList(@RequestParam(required = false, defaultValue = "0") Integer currentPage, @RequestParam(required = false) Integer numberOfPages,
+                                        @RequestParam(required = false) String backUrl, HttpServletRequest request) {
+        ModelAndView mv = doMenu(request, "machineShopList", backUrl);
+        mv.addObject("machineShops", MachineShopListView.findAll(currentPage));
         mv.addObject("currentPage", currentPage);
         mv.addObject("numberOfPages", numberOfPages != null ? numberOfPages : MachineShopListView.findNumberOfPages());
         return mv;
+    }
+
+    @RequestMapping(value = "parking", method = RequestMethod.GET)
+    public ModelAndView parkingLotList(@RequestParam(required = false) String backUrl, HttpServletRequest request) {
+        return doMenu(request, "parkingLot", backUrl);
     }
 
     @RequestMapping(value = "order", method = RequestMethod.GET)
@@ -99,7 +106,7 @@ public class ApplicationController {
         ModelAndView mv = doMenu(request, "saleOrderList", backUrl);
         mv.addObject("salesOrder", SaleOrderHeaderView.findAll(currentPage));
         mv.addObject("currentPage", currentPage);
-        mv.addObject("numberOfPages", numberOfPages != null ? numberOfPages : MachineShopListView.findNumberOfPages());
+        mv.addObject("numberOfPages", numberOfPages != null ? numberOfPages : SaleOrderHeaderView.findNumberOfPages());
         return mv;
     }
 
@@ -134,6 +141,7 @@ public class ApplicationController {
         ModelAndView mv = doMenu(request, "saleOrder", backUrl);
         mv.addObject("saleOrder", saleOrder);
         mv.addObject("canEdit", canEdit);
+        mv.addObject("status", SaleOrderStatus.findAll());
         return mv;
     }
 
@@ -164,7 +172,10 @@ public class ApplicationController {
         boolean result = userDB.save();
         if (result) {
             SessionUtils.addProperty(request, ApplicationContants.SESSION_USERNAME, user.getUsername());
-            return new ModelAndView("redirect:user");
+            ModelAndView mv = new ModelAndView();
+            mv.setView(new RedirectView(StringUtils.defaultString(backUrl, request.getContextPath() + "/user"), false));
+//            return new ModelAndView("redirect:" + StringUtils.defaultString(backUrl, "user"));
+            return mv;
         }
         return new ModelAndView("redirect:registerUser");
     }
@@ -186,7 +197,10 @@ public class ApplicationController {
         }
         boolean result = technicianDB.save();
         if (result) {
-            return new ModelAndView("redirect:technician");
+            ModelAndView mv = new ModelAndView();
+            mv.setView(new RedirectView(StringUtils.defaultString(backUrl, request.getContextPath() + "/technician"), false));
+//            return new ModelAndView("redirect:" + StringUtils.defaultString(backUrl, "technician"));
+            return mv;
         }
         return new ModelAndView("redirect:registerTechnician");
     }
@@ -202,13 +216,16 @@ public class ApplicationController {
         SaleOrder saleOrderDB;
         if (saleOrder.getId() != null) {
             saleOrderDB = SaleOrder.findById(saleOrder.getId());
-            saleOrderDB.getData(saleOrder);
         } else {
             saleOrderDB = saleOrder;
         }
+        saleOrderDB.getData(saleOrder);
         boolean result = saleOrderDB.saveWithTechnicians(idTechnicians);
         if (result) {
-            return new ModelAndView("redirect:order");
+            ModelAndView mv = new ModelAndView();
+            mv.setView(new RedirectView(StringUtils.defaultString(backUrl, request.getContextPath() + "/order"), false));
+//            return new ModelAndView("redirect:" + request.getContextPath() + StringUtils.defaultString(backUrl, "order"));
+            return mv;
         }
         return doSaleOrder(saleOrder, true, backUrl, request);
     }

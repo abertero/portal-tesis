@@ -29,6 +29,11 @@ public class SaleOrder extends BaseEntity {
             inverseJoinColumns = {@JoinColumn(name = "id_technician", referencedColumnName = "id")})
     private List<Technician> technicians = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    private SaleOrderStatus status;
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<SaleOrderLog> logs = new ArrayList<>();
+
     //<editor-fold desc="Getters and Setters">
     public Long getIdDocNum() {
         return idDocNum;
@@ -54,6 +59,21 @@ public class SaleOrder extends BaseEntity {
         this.parking = parking;
     }
 
+    public SaleOrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(SaleOrderStatus status) {
+        this.status = status;
+    }
+
+    public List<SaleOrderLog> getLogs() {
+        return logs;
+    }
+
+    public void setLogs(List<SaleOrderLog> logs) {
+        this.logs = logs;
+    }
     //</editor-fold>
 
     //<editor-fold desc="Methods">
@@ -69,7 +89,7 @@ public class SaleOrder extends BaseEntity {
 
     @Override
     protected String attributes() {
-        return super.attributes() + ", idDocNum: " + idDocNum;
+        return super.attributes() + ", idDocNum: " + idDocNum + ", parking: " + parking + ", status: " + (status != null ? status.getName() : "S/I");
     }
 
     public boolean saveWithTechnicians(Long[] idTechnicians) {
@@ -77,7 +97,11 @@ public class SaleOrder extends BaseEntity {
             technicians.clear();
             technicians.addAll(Technician.findbyIds(idTechnicians));
         }
-        return save();
+        boolean result = save();
+        if (result) {
+            log("Se ha actualizado la orden.");
+        }
+        return result;
     }
 
     public boolean save() {
@@ -95,6 +119,10 @@ public class SaleOrder extends BaseEntity {
         return false;
     }
 
+    public void log(String message) {
+        new SaleOrderLog(this, message).save();
+    }
+
     public void validateSaleOrderForm(BindingResult errors) {
 
     }
@@ -107,6 +135,11 @@ public class SaleOrder extends BaseEntity {
     }
 
     public void getData(SaleOrder saleOrder) {
+        if (saleOrder.getStatus() != null && saleOrder.getStatus().getId() != null) {
+            this.status = saleOrder.getStatus();
+        } else {
+            this.status = null;
+        }
         this.parking = saleOrder.getParking();
     }
     //</editor-fold>

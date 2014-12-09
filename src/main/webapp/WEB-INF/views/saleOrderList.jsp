@@ -12,6 +12,7 @@
   <table class="table table-hover">
     <tr>
       <th><spring:message code="saleOrderList.label.docNum"/></th>
+      <th><spring:message code="saleOrderList.label.docDate"/></th>
       <th><spring:message code="saleOrderList.label.cardCode"/></th>
       <th><spring:message code="saleOrderList.label.cardName"/></th>
       <th><spring:message code="saleOrderList.label.name"/></th>
@@ -29,6 +30,7 @@
     <c:forEach items="${salesOrder}" var="sale">
       <tr>
         <td><c:out value="${sale.docNum}"/></td>
+        <td><c:out value="${sale.docDate}"/></td>
         <td><c:out value="${sale.cardCode}"/></td>
         <td><c:out value="${sale.cardName}"/></td>
         <td><c:out value="${sale.name}"/></td>
@@ -38,10 +40,10 @@
         <td><c:out value="${sale.color}"/></td>
         <td>
           <c:url var="viewSaleOrder" value="order/${sale.docNum}">
-            <c:param name="backUrl" value="${ctx}/order?currentPage=${currentPage+1}&numberOfPages=${numberOfPages}"/>
+            <c:param name="backUrl" value="${ctx}/order?currentPage=${currentPage}&numberOfPages=${numberOfPages}"/>
           </c:url>
           <c:url var="editSaleOrder" value="order/${sale.docNum}">
-            <c:param name="backUrl" value="${ctx}/order?currentPage=${currentPage+1}&numberOfPages=${numberOfPages}"/>
+            <c:param name="backUrl" value="${ctx}/order?currentPage=${currentPage}&numberOfPages=${numberOfPages}"/>
             <c:param name="canEdit" value="true"/>
           </c:url>
           <a href="${viewSaleOrder}">

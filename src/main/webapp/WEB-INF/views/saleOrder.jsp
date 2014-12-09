@@ -39,7 +39,7 @@
       <td>&nbsp;</td>
     </tr>
     <tr>
-      <th><spring:message code="parkingLotList.label.uAuNameVendor"/></th>
+      <th><spring:message code="machineShopList.label.uAuNameVendor"/></th>
       <td><c:out value="${saleOrder.headerView.vendedor}"/></td>
     </tr>
   </table>
@@ -109,6 +109,19 @@ so p
           </div>
         </div>
         <div class="form-group">
+          <label class="control-label col-xs-12 col-sm-2"><spring:message code="saleOrder.label.status"/></label>
+
+          <div class="col-xs-12 col-sm-9">
+            <select name="status.id" id="statusId" class="form-control">
+              <option value=""><spring:message code="saleOrder.label.status.default"/></option>
+              <c:forEach items="${status}" var="st">
+                <option value="${st.id}" ${saleOrder.status.id == st.id ? 'selected="selected"':''}><c:out
+                    value="${st.name}"/></option>
+              </c:forEach>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
           <div class="col-xs-12 col-sm-2 col-sm-offset-10">
             <input type="submit" class="btn btn-primary"
                    value="<spring:message code="saleOrder.label.submit"/>"/>&nbsp;&nbsp;
@@ -123,6 +136,29 @@ so p
     </form>
   </c:when>
   <c:otherwise>
+    <table class="table table-responsive">
+      <tr>
+        <th><spring:message code="saleOrder.label.parking"/></th>
+        <td><c:out value="${saleOrder.parking}"/></td>
+      </tr>
+      <tr>
+        <th><spring:message code="saleOrder.label.technicians"/></th>
+        <td>
+          <c:if test="${not empty saleOrder.technicians}">
+            <ul>
+              <c:forEach items="${saleOrder.technicians}" var="tech">
+                <li class="liTech${tech.id}"><c:out value="${tech.fullName}"/></li>
+              </c:forEach>
+            </ul>
+          </c:if>
+        </td>
+      </tr>
+      <tr>
+        <th><spring:message code="saleOrder.label.status"/></th>
+        <td><c:out value="${saleOrder.status.name}"/></td>
+      </tr>
+    </table>
+
     <div class="form-group">
       <div class="col-xs-12 col-sm-2 col-sm-offset-10">
         <c:choose>
@@ -160,10 +196,10 @@ so p
   function sumaTotalComision() {
     importe_total = 0
     $(".suma").each(
-            function(index, value) {
-             importe_total = importe_total + parseInt($(this).text());
+        function (index, value) {
+          importe_total = importe_total + parseInt($(this).text());
 
-            }
+        }
     );
     alert(importe_total);
     //$("#total").val(importe_total);

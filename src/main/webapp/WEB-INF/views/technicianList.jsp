@@ -21,7 +21,9 @@
         <td><c:out value="${technician.code}"/></td>
         <td><c:out value="${technician.firstName}"/></td>
         <td><c:out value="${technician.lastName}"/></td>
-        <td><a href="technician/<c:out value="${technician.altKey}"/>?canEdit=true">Editar</a>&nbsp;|&nbsp;<a href="#">Eliminar</a>
+        <!-- <span class="glyphicon glyphicon-edit" title="<spring:message code="userList.action.edit"/>"></span>-->
+        <td><a href="technician/<c:out value="${technician.altKey}"/>?canEdit=true"><span class="glyphicon glyphicon-edit" title="Editar"></a>&nbsp;|&nbsp;
+            <a href="#"><span class="glyphicon glyphicon-remove" title="Eliminar"s></span></a>
         </td>
       </tr>
     </c:forEach>

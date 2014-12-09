@@ -122,4 +122,8 @@ public class SaleOrderHeaderView {
     public static SaleOrderHeaderView findByDocNum(Long docNum) {
         return JPA.queryFirst("SELECT hv FROM SaleOrderHeaderView hv WHERE hv.docNum = ?1", docNum);
     }
+
+    public static int findNumberOfPages() {
+        return JPA.numberOfPages(SaleOrderHeaderView.class);
+    }
 }

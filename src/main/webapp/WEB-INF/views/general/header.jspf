@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="${ctx}/static/css/body.css"/>
   <link href='http://fonts.googleapis.com/css?family=Terminal+Dosis' rel='stylesheet' type='text/css'/>
   <script src="${ctx}/static/js/jquery-1.11.1.min.js"></script>
+  <script src="${ctx}/static/js/jquery.validate.js"></script>
   <script src="${ctx}/static/js/bootstrap.min.js"></script>
   <script src="${ctx}/static/js/typeahead.js/bloodhound.min.js"></script>
   <script src="${ctx}/static/js/typeahead.js/typeahead.jquery.min.js"></script>

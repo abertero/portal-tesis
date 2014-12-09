@@ -8,6 +8,7 @@ import portal.config.JPA;
 import portal.model.base.BaseEntity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +24,12 @@ public class User extends BaseEntity {
     private String email;
     private String phone;
     private String address;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_role",
+            joinColumns = {@JoinColumn(name = "id_user", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "id_role", referencedColumnName = "id")})
+    private List<Role> roles = new ArrayList<>();
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date registerDate;
@@ -91,7 +98,16 @@ public class User extends BaseEntity {
     public void setRegisterDate(Date registerDate) {
         this.registerDate = registerDate;
     }
-    //</editor-fold>
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
+//</editor-fold>
 
     //<editor-fold desc="Methods">
 

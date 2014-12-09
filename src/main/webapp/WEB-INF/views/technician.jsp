@@ -7,12 +7,12 @@
 <div class="container" style="padding-top: 1em;">
 <c:choose>
   <c:when test="${canEdit}">
-    <form action="${ctx}/saveTechnician" method="post">
+    <form action="${ctx}/saveTechnician" id="registerTechnician" method="post">
       <input type="hidden" name="id" value="${technician.id}"/>
       <div class="form-horizontal">
 
         <div class="form-group">
-          <label class="col-xs-12 col-sm-2 control-label" for="firstName"><spring:message code="technician.codigo"/></label>
+          <label class="col-xs-12 col-sm-2 control-label" for="code"><spring:message code="technician.codigo"/></label>
 
           <div class="col-xs-12 col-sm-9">
             <input type="text" class="form-control" name="code" id="code" value="${technician.code}"/>
@@ -35,8 +35,27 @@
 
       </div>
       <input type="submit" class="btn btn-primary" value="<spring:message code="technician.submit"/>"/>
-      <a class="btn btn-primary" href="technician">Volver</a>
+      <a class="btn btn-primary" href="${ctx}/technician">Volver</a>
     </form>
+    <script>
+      $( document ).ready(function() {
+
+        $("#registerTechnician").validate({
+          rules: {
+            code: "required",
+            firstName: "required",
+            lastName: "required"
+
+          },
+          messages: {
+            code: "<spring:message code="technician.validate.code"/>",
+            firstName: "<spring:message code="technician.validate.firstName"/>",
+            lastName: "<spring:message code="technician.validate.lastName"/>"
+          }
+        });
+      });
+
+    </script>
   </c:when>
   <c:otherwise>
     <div style="width: 80%">

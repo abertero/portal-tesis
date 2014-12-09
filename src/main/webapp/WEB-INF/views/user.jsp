@@ -9,7 +9,7 @@
 <div class="container" style="padding-top: 1em;">
   <c:choose>
     <c:when test="${canEdit}">
-      <form action="${ctx}/saveUser" method="post">
+      <form action="${ctx}/saveUser" id="registerUser" method="post">
         <input type="hidden" name="id" value="${user.id}"/>
 
         <div class="form-horizontal">
@@ -79,6 +79,36 @@
         <input type="submit" class="btn btn-primary" value="<spring:message code="register.submit"/>"/>
         <input type="button" class="btn btn-primary" value="Volver" onclick="javascript:history.back()">
       </form>
+      <script>
+        $( document ).ready(function() {
+
+          $("#registerUser").validate({
+            rules: {
+              username: {
+                required: true,
+                minlength: 2
+              },
+              firstName: "required",
+              lastName: "required",
+              email: {
+                required: true,
+                email: true
+              }
+            },
+            messages: {
+              username: {
+                required: "<spring:message code="register.validate.username"/>",
+                minlength: "<spring:message code="register.validate.username.minlength"/>"
+              },
+              firstName: "<spring:message code="register.validate.firstname"/>",
+              lastName: "<spring:message code="register.validate.lastname"/>",
+              email: "<spring:message code="register.validate.email"/>"
+
+            }
+          });
+        });
+
+      </script>
     </c:when>
     <c:otherwise>
       <div style="width: 80%">

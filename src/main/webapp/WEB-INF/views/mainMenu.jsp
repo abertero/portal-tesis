@@ -52,7 +52,7 @@
         </a>
       </li>
       <li>
-        <a href="${ctx}/order">
+        <a href="${ctx}/machineShop">
           <span class="ca-icon">F</span>
 
           <div class="ca-content">
