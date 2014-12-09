@@ -8,6 +8,7 @@ import portal.config.JPA;
 import portal.model.base.BaseEntity;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import java.io.Serializable;
@@ -24,8 +25,8 @@ public class Technician extends BaseEntity implements Serializable {
     private String firstName;
     private String lastName;
 
-    @OneToMany(mappedBy = "technician")
-    private List<SaleOrderTechnician> comissions =  new ArrayList<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "technician")
+    private List<SaleOrderTechnician> comissions = new ArrayList<>();
 
     //<editor-fold desc="Getters and setters">
 

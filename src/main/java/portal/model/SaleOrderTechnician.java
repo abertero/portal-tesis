@@ -1,5 +1,8 @@
 package portal.model;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import portal.config.JPA;
 import portal.model.base.BaseEntity;
 
 import javax.persistence.Entity;
@@ -8,10 +11,11 @@ import javax.persistence.ManyToOne;
 
 @Entity
 public class SaleOrderTechnician extends BaseEntity {
+    private static final Logger logger = LoggerFactory.getLogger(SaleOrderTechnician.class);
 
     @ManyToOne(fetch = FetchType.LAZY)
     private SaleOrder saleOrder;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Technician technician;
     private Double comission = 0d;
 
@@ -49,4 +53,25 @@ public class SaleOrderTechnician extends BaseEntity {
         this.comission = comission;
     }
     //</editor-fold>
+
+    public boolean save() {
+        try {
+            if (!JPA.em().contains(this)) {
+                JPA.em().persist(this);
+            } else {
+                JPA.em().flush();
+            }
+            logger.info("Modified sale order technician " + toString());
+            return true;
+        } catch (Exception e) {
+            logger.error("Exception modifying sale order technician", e);
+        }
+        return false;
+    }
+
+    @Override
+    public String attributes() {
+        return super.attributes() + ", saleOrder: {" + saleOrder.attributes() + "}, technician: {" + technician.attributes() +
+                "}, comission: " + comission;
+    }
 }

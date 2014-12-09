@@ -85,11 +85,7 @@ public class SaleOrderLog extends BaseEntity {
     }
 
     @Override
-    public String toString() {
-        return "Log {id: " + id +
-                ", idDocNum: " + (saleOrder != null ? saleOrder.getIdDocNum() : "") +
-                ", change: " + change +
-                ", status: " + status +
-                "}";
+    public String attributes() {
+        return super.attributes() + ", saleOrder: {" + saleOrder.attributes() + "}, change: " + change + ", status: " + status;
     }
 }

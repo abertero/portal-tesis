@@ -94,6 +94,7 @@ public class SaleOrder extends BaseEntity {
         if (idTechnicians != null) {
             for (Technician technician : Technician.findbyIds(idTechnicians)) {
                 SaleOrderTechnician saleOrderTechnician = new SaleOrderTechnician(this, technician, comission);
+                saleOrderTechnician.save();
                 technicians.add(saleOrderTechnician);
             }
         }
