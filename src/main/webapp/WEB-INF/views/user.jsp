@@ -75,6 +75,22 @@
               <input type="text" class="form-control" name="address" id="address" value="${user.address}"/>
             </div>
           </div>
+          <div class="form-group">
+            <label class="col-xs-12 col-sm-2 control-label" for="roles"><spring:message
+                    code="register.roles"/></label>
+
+            <div class="col-xs-12 col-sm-9">
+              <table>
+                <c:forEach items="${roles}" var="rol">
+                    <tr>
+                      <th><input type="checkbox"  name="idRoles" <c:forEach items="${user.roles}" var="rolUser"> </c:forEach> value="${rol.id}"/></th>
+                      <td><c:out value="${rol.name}"/></td>
+                    </tr>
+
+                </c:forEach>
+              </table>
+            </div>
+          </div>
         </div>
         <input type="submit" class="btn btn-primary" value="<spring:message code="register.submit"/>"/>
         <input type="button" class="btn btn-primary" value="Volver" onclick="javascript:history.back()">

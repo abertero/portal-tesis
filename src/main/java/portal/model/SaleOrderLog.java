@@ -6,11 +6,10 @@ import org.slf4j.LoggerFactory;
 import portal.config.JPA;
 import portal.model.base.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -20,6 +19,9 @@ public class SaleOrderLog extends BaseEntity {
     private String change;
     @Column(length = 4000)
     private String status;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date date;
+    private String username;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private SaleOrder saleOrder;
@@ -48,24 +50,50 @@ public class SaleOrderLog extends BaseEntity {
         this.saleOrder = saleOrder;
     }
 
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getStatusNL2BR() {
+        return status != null ? status.replace("\n", "</br>") : null;
+    }
+
     public SaleOrderLog() {
     }
 
-    public SaleOrderLog(SaleOrder saleOrder, String change) {
+    public SaleOrderLog(SaleOrder saleOrder, String change, String username) {
         this.change = change;
         this.status = makeStatus(saleOrder);
         this.saleOrder = saleOrder;
+        this.date = new Date();
+        this.username = username;
     }
 
     private static String makeStatus(SaleOrder saleOrder) {
-        String result = "Técnicos: ";
+        String result = "T\u00e9cnicos: ";
         List<String> technicianNames = new ArrayList<>();
         for (SaleOrderTechnician saleOrderTechnician : saleOrder.getTechnicians()) {
-            technicianNames.add(saleOrderTechnician.getTechnician().getFullName() + " (Comisión $" + (saleOrderTechnician.getComission() != null ? saleOrderTechnician.getComission() : 0d) + ")");
+            technicianNames.add(saleOrderTechnician.getTechnician().getFullName() + " (Comisi\u00f3n $" + (saleOrderTechnician.getComission() != null ? saleOrderTechnician.getComission() : 0d) + ")");
         }
         result += (technicianNames.isEmpty() ? "S/T" : StringUtils.join(technicianNames.toArray(), ", ")) + "\n";
         result += "Estacionamiento: " + (saleOrder.getParking() != null ? "N/D" : saleOrder.getParking()) + "\n";
-        result += "Estado: " + (saleOrder.getStatus() != null ? saleOrder.getStatus().getName() : "S/E");
+        SaleOrderStatus status = null;
+        if (saleOrder.getStatus() != null && saleOrder.getStatus().getId() != null) {
+            status = SaleOrderStatus.findById(saleOrder.getStatus().getId());
+        }
+        result += "Estado: " + (status != null ? status.getName() : "S/E");
         return result;
     }
 
@@ -86,6 +114,14 @@ public class SaleOrderLog extends BaseEntity {
 
     @Override
     public String attributes() {
-        return super.attributes() + ", saleOrder: {" + saleOrder.attributes() + "}, change: " + change + ", status: " + status;
+        return super.attributes() + ", saleOrder: {" + saleOrder.attributes() + "}, change: " + change + ", status: " + status +
+                ", date: " + (new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(date)) + ", username: " + username;
+    }
+
+    public static List<SaleOrderLog> findBySaleOrder(Long idSaleOrder) {
+        if (idSaleOrder == null) {
+            return new ArrayList<>();
+        }
+        return JPA.query("SELECT l FROM SaleOrderLog l WHERE l.saleOrder.id = ?1 ORDER BY l.date DESC", idSaleOrder);
     }
 }

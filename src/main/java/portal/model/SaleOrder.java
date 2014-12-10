@@ -23,7 +23,7 @@ public class SaleOrder extends BaseEntity {
     private List<SaleOrderLineView> headerLines = new ArrayList<>();
     private Integer parking;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "saleOrder", cascade = CascadeType.REFRESH)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "saleOrder", cascade = CascadeType.REMOVE)
     private List<SaleOrderTechnician> technicians = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -89,8 +89,9 @@ public class SaleOrder extends BaseEntity {
         return super.attributes() + ", idDocNum: " + idDocNum + ", parking: " + parking + ", status: " + (status != null ? status.getName() : "S/I");
     }
 
-    public boolean saveWithTechnicians(Long[] idTechnicians, Double comission) {
+    public boolean saveWithTechnicians(Long[] idTechnicians, Double comission, String username) {
         technicians.clear();
+        SaleOrderTechnician.removeForSaleOrder(id);
         if (idTechnicians != null) {
             for (Technician technician : Technician.findbyIds(idTechnicians)) {
                 SaleOrderTechnician saleOrderTechnician = new SaleOrderTechnician(this, technician, comission);
@@ -100,7 +101,7 @@ public class SaleOrder extends BaseEntity {
         }
         boolean result = save();
         if (result) {
-            log("Se ha actualizado la orden.");
+            log("Se ha actualizado la orden.", username);
         }
         return result;
     }
@@ -120,8 +121,8 @@ public class SaleOrder extends BaseEntity {
         return false;
     }
 
-    public void log(String message) {
-        new SaleOrderLog(this, message).save();
+    public void log(String message, String username) {
+        new SaleOrderLog(this, message, username).save();
     }
 
     public void validateSaleOrderForm(BindingResult errors) {

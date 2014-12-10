@@ -74,4 +74,8 @@ public class SaleOrderTechnician extends BaseEntity {
         return super.attributes() + ", saleOrder: {" + saleOrder.attributes() + "}, technician: {" + technician.attributes() +
                 "}, comission: " + comission;
     }
+
+    public static void removeForSaleOrder(Long idSaleOrder) {
+        JPA.updateNamed("DELETE FROM SaleOrderTechnician st WHERE st.saleOrder.id = :idSaleOrder", "idSaleOrder", idSaleOrder);
+    }
 }

@@ -174,4 +174,12 @@ public class User extends BaseEntity {
         return count != null && count.longValue() == 1;
     }
     //</editor-fold>
+
+    public boolean saveWithRoles(Long[] idRoles) {
+        if (idRoles != null) {
+            roles.clear();
+            roles.addAll(Role.findbyIds(idRoles));
+        }
+        return save();
+    }
 }

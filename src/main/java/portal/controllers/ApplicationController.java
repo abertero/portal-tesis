@@ -9,8 +9,10 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import portal.config.ApplicationContants;
 import portal.model.SaleOrder;
+import portal.model.SaleOrderLog;
 import portal.model.SaleOrderStatus;
 import portal.model.Technician;
+import portal.model.user.Role;
 import portal.model.user.User;
 import portal.model.views.MachineShopListView;
 import portal.model.views.SaleOrderHeaderView;
@@ -35,8 +37,10 @@ public class ApplicationController {
         if (request != null) {
             String username = SessionUtils.getProperty(request, ApplicationContants.SESSION_USERNAME);
             if (!StringUtils.isEmpty(username)) {
+
                 mv = new ModelAndView(view);
                 mv.addObject("user", StringUtils.isNotEmpty(username) ? User.findByUsername(username) : new User());
+                mv.addObject("usrRol", User.findByUsername(username));
                 mv.addObject("backUrl", backUrl);
             }
         }
@@ -126,6 +130,7 @@ public class ApplicationController {
     private ModelAndView doUser(User user, boolean canEdit, String backUrl, HttpServletRequest request) {
         ModelAndView mv = doMenu(request, "user", backUrl);
         mv.addObject("user", user);
+        mv.addObject("roles", Role.findAll());
         mv.addObject("canEdit", canEdit);
         return mv;
     }
@@ -142,6 +147,7 @@ public class ApplicationController {
         mv.addObject("saleOrder", saleOrder);
         mv.addObject("canEdit", canEdit);
         mv.addObject("status", SaleOrderStatus.findAll());
+        mv.addObject("history", SaleOrderLog.findBySaleOrder(saleOrder.getId()));
         return mv;
     }
 
@@ -157,7 +163,7 @@ public class ApplicationController {
     @RequestMapping(value = "saveUser", method = RequestMethod.POST)
     @Transactional
     public ModelAndView saveUser(@ModelAttribute User user, BindingResult errors,
-                                 @RequestParam(required = false) String backUrl, HttpServletRequest request) {
+                                 @RequestParam(required = false) String backUrl, @RequestParam(required = false) Long[] idRoles, HttpServletRequest request) {
         user.validateUserForm(errors);
         if (errors.hasErrors()) {
             return doUser(user, true, backUrl, request);
@@ -171,6 +177,8 @@ public class ApplicationController {
         }
         boolean result = userDB.save();
         if (result) {
+            //saleOrderDB.saveWithTechnicians(idTechnicians);
+            userDB.saveWithRoles(idRoles);
             SessionUtils.addProperty(request, ApplicationContants.SESSION_USERNAME, user.getUsername());
             ModelAndView mv = new ModelAndView();
             mv.setView(new RedirectView(StringUtils.defaultString(backUrl, request.getContextPath() + "/user"), false));
@@ -220,7 +228,8 @@ public class ApplicationController {
             saleOrderDB = saleOrder;
         }
         saleOrderDB.getData(saleOrder);
-        boolean result = saleOrderDB.saveWithTechnicians(idTechnicians, comission);
+        String username = SessionUtils.getProperty(request, ApplicationContants.SESSION_USERNAME);
+        boolean result = saleOrderDB.saveWithTechnicians(idTechnicians, comission, username);
         if (result) {
             ModelAndView mv = new ModelAndView();
             mv.setView(new RedirectView(StringUtils.defaultString(backUrl, request.getContextPath() + "/order"), false));

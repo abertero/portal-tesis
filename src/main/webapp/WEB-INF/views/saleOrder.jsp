@@ -101,14 +101,14 @@ so p
               <c:if test="${not empty saleOrder.technicians}">
                 <ul>
                   <c:forEach items="${saleOrder.technicians}" var="tech">
-                    <li class="liTechnicians liTech${tech.technician.id}"><span><input type="hidden"
-                                                                                       name="idTechnicians"
-                                                                                       value="${tech.technician.id}"/>
-                      <c:out value="${tech.technician.fullName}"/>&nbsp;$<span
-                          class="comission">${tech.comission}</span>
+                    <li class="liTechnicians liTech${tech.technician.id}">
+                      <span><input type="hidden" name="idTechnicians" value="${tech.technician.id}"/>
+                      <c:out value="${tech.technician.fullName}"/>&nbsp;$
+                        <span class="comission">${tech.comission}</span>
                       <a href="javascript:void(0);" class="deleteTechnician">
                         <span class="glyphicon glyphicon-remove"
-                              title="<spring:message code="saleOrder.label.technicians.remove"/>"></span></a></span>
+                              title="<spring:message code="saleOrder.label.technicians.remove"/>"></span></a>
+                      </span>
                     </li>
                   </c:forEach>
                 </ul>
@@ -130,7 +130,7 @@ so p
           </div>
         </div>
         <div class="form-group">
-          <div class="col-xs-12 col-sm-2 col-sm-offset-10">
+          <div class="col-xs-12 col-sm-3 col-sm-offset-9">
             <input type="submit" class="btn btn-primary"
                    value="<spring:message code="saleOrder.label.submit"/>"/>&nbsp;&nbsp;
             <c:choose>
@@ -138,6 +138,8 @@ so p
                   code="application.back"/></a></c:when>
               <c:otherwise><a href="${ctx}/order" class="btn btn-default"><spring:message code="application.back"/></a></c:otherwise>
             </c:choose>
+            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#history"><spring:message
+                code="saleOrder.log.show"/></button>
           </div>
         </div>
       </div>
@@ -169,17 +171,21 @@ so p
     </table>
 
     <div class="form-group">
-      <div class="col-xs-12 col-sm-2 col-sm-offset-10">
+      <div class="col-xs-12 col-sm-3 col-sm-offset-9">
         <c:choose>
           <c:when test="${not empty backUrl}"><a href="${backUrl}" class="btn btn-default"><spring:message
               code="application.back"/></a></c:when>
           <c:otherwise><a href="${ctx}/order" class="btn btn-default"><spring:message
               code="application.back"/></a></c:otherwise>
         </c:choose>
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#history"><spring:message
+            code="saleOrder.log.show"/></button>
       </div>
     </div>
   </c:otherwise>
 </c:choose>
+<!-- Modal -->
+<%@include file="general/saleOrderLogModal.jspf" %>
 
 <script type="text/javascript">
   $(function () {
@@ -212,7 +218,7 @@ so p
   function sumaTotalComision() {
     var importeTotal = 0
     $("span.suma").each(
-        function (index, value) {
+        function () {
           importeTotal = importeTotal + parseInt($(this).text());
         }
     );
@@ -228,7 +234,10 @@ so p
   }
 
   function deleteTechnician() {
-    $("a.deleteTechnician").closest("li").remove();
+    $("span#technicians").on("click", "a.deleteTechnician", function () {
+      $(this).closest("li").remove();
+      calcularComision();
+    });
   }
 </script>
 </body>

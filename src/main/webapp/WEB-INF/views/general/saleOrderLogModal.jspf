@@ -1,0 +1,43 @@
+<div class="modal fade" id="history" tabindex="-1" role="dialog" aria-labelledby="historyLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+            class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="historyLabel"><spring:message code="saleOrder.log.title"/></h4>
+      </div>
+      <div class="modal-body">
+        <div style="max-height: 400px; overflow: auto;">
+          <c:choose>
+            <c:when test="${not empty history}">
+              <table class="table table-bordered">
+                <c:forEach items="${history}" var="hist">
+                  <tr>
+                    <td>
+                      <div>
+                        <div style="font-weight: bold;"><c:out value="${hist.change}"/></div>
+                        <div><c:out value="${hist.username}"/></div>
+                        <div style="font-style: italic;"><fmt:formatDate pattern="dd/MM/yyyy hh:mm:ss"
+                                                                         value="${hist.date}"/></div>
+                      </div>
+                    </td>
+                    <td>
+                      <div>${hist.statusNL2BR}</div>
+                    </td>
+                  </tr>
+                </c:forEach>
+              </table>
+            </c:when>
+            <c:otherwise>
+              <p><spring:message code="saleOrder.log.empty"/></p>
+            </c:otherwise>
+          </c:choose>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal"><spring:message
+            code="saleOrder.log.close"/></button>
+      </div>
+    </div>
+  </div>
+</div>
