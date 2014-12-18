@@ -145,6 +145,7 @@ public class ApplicationController {
     private ModelAndView doSaleOrder(SaleOrder saleOrder, boolean canEdit, String backUrl, HttpServletRequest request) {
         ModelAndView mv = doMenu(request, "saleOrder", backUrl);
         mv.addObject("saleOrder", saleOrder);
+        mv.addObject("technicians", Technician.findNotInSaleOrder(saleOrder.getId()));
         mv.addObject("canEdit", canEdit);
         mv.addObject("status", SaleOrderStatus.findAll());
         mv.addObject("history", SaleOrderLog.findBySaleOrder(saleOrder.getId()));

@@ -114,4 +114,8 @@ public class Technician extends BaseEntity implements Serializable {
     public static List<Technician> findByCode(String code) {
         return JPA.query("SELECT t FROM Technician t WHERE t.code LIKE ?1", code != null ? "%" + code + "%" : null);
     }
+
+    public static List<Technician> findNotInSaleOrder(Long saleOrderId) {
+        return JPA.query("SELECT t FROM Technician t WHERE NOT EXISTS(SELECT sot FROM SaleOrderTechnician sot WHERE sot.technician = t AND sot.saleOrder.id = ?1)", saleOrderId);
+    }
 }

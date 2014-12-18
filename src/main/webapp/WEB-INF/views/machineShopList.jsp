@@ -13,6 +13,7 @@
       <th><spring:message code="machineShopList.label.docDate"/></th>
       <th><spring:message code="machineShopList.label.vehicle"/></th>
       <th><spring:message code="machineShopList.label.color"/></th>
+      <th><spring:message code="machineShopList.label.status"/></th>
       <th><spring:message code="machineShopList.label.uAuPatente"/></th>
       <th><spring:message code="machineShopList.label.uAuChasis"/></th>
       <th><spring:message code="machineShopList.label.location"/></th>
@@ -33,6 +34,7 @@
         <td><c:out value="${machineShop.docDate}"/></td>
         <td><c:out value="${machineShop.vehicle}"/></td>
         <td><c:out value="${machineShop.color}"/></td>
+        <td><c:out value="${machineShop.status}"/></td>
         <td><c:out value="${machineShop.uAuPatente}"/></td>
         <td><c:out value="${machineShop.uAuChasis}"/></td>
         <td><c:out value="${machineShop.location}"/></td>

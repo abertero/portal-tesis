@@ -34,6 +34,8 @@ public class MachineShopListView {
     private String uAuBodDestino;
     @Column(name = "canal")
     private String prjName;
+    @Column(name = "estado")
+    private String status;
 
     //<editor-fold desc="Getters and Setters">
     public Long getDocNum() {
@@ -122,6 +124,14 @@ public class MachineShopListView {
 
     public void setPrjName(String prjName) {
         this.prjName = prjName;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
     // </editor-fold>
 

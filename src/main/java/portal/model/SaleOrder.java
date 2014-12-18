@@ -164,5 +164,10 @@ public class SaleOrder extends BaseEntity {
     public static SaleOrder findById(Long id) {
         return JPA.em().find(SaleOrder.class, id);
     }
+
+    public static boolean isValidParkingLot(Integer parking) {
+        Number count = JPA.querySingle("SELECT COUNT(s) FROM SaleOrder s WHERE s.parking = ?1", parking);
+        return count != null && count.intValue() == 0;
+    }
     //</editor-fold>
 }

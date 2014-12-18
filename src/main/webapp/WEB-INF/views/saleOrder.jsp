@@ -94,9 +94,21 @@ so p
         <div class="form-group">
           <label class="control-label col-xs-12 col-sm-2"><spring:message code="saleOrder.label.technicians"/></label>
 
-          <div class="col-xs-12 col-sm-9">
-            <input type="text" class="form-control" id="technicianAdd" value=""/>
-            <portal:technicianAutocomplete inputId="technicianAdd" callback="callback" resetOnEnter="true"/>
+          <div class="col-xs-12 col-sm-9" style="margin-bottom: 10px;">
+              <%--<input type="text" class="form-control" id="technicianAdd" value=""/>--%>
+              <%--<portal:technicianAutocomplete inputId="technicianAdd" callback="callback" resetOnEnter="true"/>--%>
+            <div class="form-inline">
+              <select name="technicianSelector" id="technicianSelector" class="form-control col-xs-12 col-sm-7">
+                <option value=""><spring:message code="saleOrder.label.technician.default"/></option>
+                <c:forEach items="${technicians}" var="tech">
+                  <option value="${tech.id}" id="option-${tech.id}" data-display-name="${tech.code} - ${tech.fullName}">
+                    <c:out
+                        value="${tech.fullName}"/></option>
+                </c:forEach>
+              </select>
+              <input type="button" class="btn btn-default col-xs-12 col-xs-4" id="technicianAdd"
+                     value="<spring:message code="saleOrder.label.technician.button.add"/>"/>
+            </div>
             <span id="technicians">
               <c:if test="${not empty saleOrder.technicians}">
                 <ul>
@@ -195,15 +207,25 @@ so p
         return false;
       }
     });
-
+    technicianSelector();
     deleteTechnician();
     sumaTotalComision();
     calcularComision();
   });
 
+  function technicianSelector() {
+    $("#technicianAdd").click(function () {
+      var id = $("#technicianSelector").val();
+      if (id != "") {
+        var displayName = $("#option-" + id).data("displayName");
+        callback({id: id, displayName: displayName});
+      }
+    })
+  }
+
   function callback(obj) {
     var html = '<li class="liTechnicians liTech' + obj.id + '"><span><input type="hidden" name="idTechnicians" value="' + obj.id + '"/>'
-        + obj.code + ' - ' + obj.firstName + ' ' + obj.lastName + ' $<span class="comission">0</span>'
+        + obj.displayName + ' $<span class="comission">0</span>'
         + ' <a href="javascript:void(0);" class="deleteTechnician" data-id-technician="' + obj.id +
         '"><span class="glyphicon glyphicon-remove" title="<spring:message code="saleOrder.label.technicians.remove"/>"></span></a></span></li>'
     if ($("span#technicians ul li.liTech" + obj.id).length == 0) {
