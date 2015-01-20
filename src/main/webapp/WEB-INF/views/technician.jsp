@@ -3,6 +3,7 @@
 <html>
 <%@include file="general/header.jspf" %>
 <body>
+<%@include file="general/loggout.jspf" %>
 <h1><spring:message code="technician.title"/></h1>
 <div class="container" style="padding-top: 1em;">
 <c:choose>
@@ -34,8 +35,10 @@
         </div>
 
       </div>
-      <input type="submit" class="btn btn-primary" value="<spring:message code="technician.submit"/>"/>
-      <a class="btn btn-primary" href="${ctx}/technician">Volver</a>
+      <div style="float: right">
+        <input type="submit" class="btn btn-primary" value="<spring:message code="technician.submit"/>"/>
+        <a class="btn btn-primary" href="${ctx}/technician">Volver</a>
+      </div>
     </form>
     <script>
       $( document ).ready(function() {
@@ -69,7 +72,10 @@
           <td><c:out value="${technician.lastName}"/></td>
         </tr>
       </table>
-      <input type="button" class="btn btn-primary" value="Volver" onclick="javascript:history.back()">
+      <div style="float: right;">
+        <input type="button" class="btn btn-primary" value="Volver" onclick="javascript:history.back()">  
+      </div>
+      
     </div>
   </c:otherwise>
 </c:choose>

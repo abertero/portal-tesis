@@ -2,6 +2,7 @@
 <html>
 <%@include file="general/header.jspf" %>
 <body>
+<%@include file="general/loggout.jspf" %>
 <h1><spring:message code="userList.title"/></h1>
 
 <div class="container" style="padding-top: 1em;">
@@ -38,8 +39,11 @@
   <c:url var="registerUrl" value="/registerUser">
     <c:param name="backUrl" value="${ctx}/user"/>
   </c:url>
-  <a class="btn btn-primary" href="${registerUrl}"><spring:message code="register.create"/></a>
-  <a class="btn btn-primary" href="menu">Volver</a>
+  <div class="col-xs-12 col-sm-2 col-sm-offset-10">
+    <a class="btn btn-primary" href="${registerUrl}"><spring:message code="register.create"/></a>
+    <a class="btn btn-primary" href="menu">Volver</a>
+  </div>
+
 </div>
 </body>
 </html>

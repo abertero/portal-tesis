@@ -3,6 +3,7 @@
 <html>
 <%@include file="general/header.jspf" %>
 <body>
+<%@include file="general/loggout.jspf" %>
 <h1><spring:message code="login.title"/></h1>
 
 
@@ -60,6 +61,7 @@
               <input type="text" class="form-control" name="email" id="email" value="${user.email}"/>
             </div>
           </div>
+          <%--
           <div class="form-group">
             <label class="col-xs-12 col-sm-2 control-label" for="phone"><spring:message code="register.phone"/></label>
 
@@ -75,6 +77,7 @@
               <input type="text" class="form-control" name="address" id="address" value="${user.address}"/>
             </div>
           </div>
+          --%>
           <div class="form-group">
             <label class="col-xs-12 col-sm-2 control-label" for="roles"><spring:message
                     code="register.roles"/></label>
@@ -83,7 +86,7 @@
               <table>
                 <c:forEach items="${roles}" var="rol">
                     <tr>
-                      <th><input type="checkbox"  name="idRoles" <c:forEach items="${user.roles}" var="rolUser"> </c:forEach> value="${rol.id}"/></th>
+                      <th><input type="checkbox"  name="idRoles" <c:forEach items="${user.roles}" var="rolUser"><c:if test="${rol.id == rolUser.id}"> checked </c:if> </c:forEach> value="${rol.id}"/></th>
                       <td><c:out value="${rol.name}"/></td>
                     </tr>
 
@@ -92,8 +95,12 @@
             </div>
           </div>
         </div>
-        <input type="submit" class="btn btn-primary" value="<spring:message code="register.submit"/>"/>
-        <input type="button" class="btn btn-primary" value="Volver" onclick="javascript:history.back()">
+
+        <div class="col-xs-12 col-sm-2 col-sm-offset-10">
+          <input type="submit" class="btn btn-primary" value="<spring:message code="register.submit"/>"/>
+          <input type="button" class="btn btn-primary" value="Volver" onclick="javascript:history.back()">
+        </div>
+
       </form>
       <script>
         $( document ).ready(function() {
@@ -145,6 +152,7 @@
             <th><spring:message code="register.email"/></th>
             <td><c:out value="${user.email}"/></td>
           </tr>
+          <%--
           <tr>
             <th><spring:message code="register.phone"/></th>
             <td><c:out value="${user.phone}"/></td>
@@ -153,8 +161,12 @@
             <th><spring:message code="register.address"/></th>
             <td><c:out value="${user.address}"/></td>
           </tr>
+          --%>
         </table>
-        <input type="button" class="btn btn-primary" value="Volver" onclick="javascript:history.back()">
+        <div class="col-xs-12 col-sm-2 col-sm-offset-10">
+          <input type="button" class="btn btn-primary" value="Volver" onclick="javascript:history.back()">
+        </div>
+
       </div>
     </c:otherwise>
   </c:choose>

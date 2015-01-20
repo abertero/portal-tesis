@@ -3,16 +3,15 @@
 <%@include file="general/header.jspf" %>
 <body>
 <%@include file="general/loggout.jspf" %>
-
 <h1><spring:message code="saleOrder.title"/></h1>
 
 <div>
   <table class="table" id="saleOrderTable">
     <tr>
-      <th><spring:message code="saleOrder.label.docNum"/></th>
-      <td><c:out value="${saleOrder.headerView.docNum}"/></td>
-      <th><spring:message code="saleOrder.label.vehicle"/></th>
-      <td>&nbsp;<%--<c:out value="${saleOrder.vehicle.name}"/>--%></td>
+      <th class="col-xs-3 col-sm-2"><spring:message code="saleOrder.label.docNum"/></th>
+      <td class="col-xs-3 col-sm-4"><c:out value="${saleOrder.headerView.docNum}"/></td>
+      <th class="col-xs-3 col-sm-2"><spring:message code="saleOrder.label.vehicle"/></th>
+      <td class="col-xs-3 col-sm-4"><c:out value="${saleOrder.headerView.name}"/></td>
     </tr>
     <tr>
       <th><spring:message code="saleOrder.label.cardCode"/></th>
@@ -32,15 +31,19 @@
       <th><spring:message code="saleOrder.label.uAuChasis"/></th>
       <td><c:out value="${saleOrder.headerView.uAuChasis}"/></td>
     </tr>
+    <%--
     <tr>
       <th><spring:message code="saleOrder.label.color"/></th>
       <td>&nbsp;</td>
       <th><spring:message code="saleOrder.label.color"/></th>
       <td>&nbsp;</td>
     </tr>
+    --%>
     <tr>
       <th><spring:message code="machineShopList.label.uAuNameVendor"/></th>
       <td><c:out value="${saleOrder.headerView.vendedor}"/></td>
+      <th><spring:message code="saleOrder.label.color"/></th>
+      <td><c:out value="${saleOrder.headerView.color}"/></td>
     </tr>
   </table>
 </div>
@@ -63,21 +66,29 @@
       <tr>
         <td><c:out value="${detail.itemCode}"/></td>
         <td><c:out value="${detail.description}"/></td>
-        <td><c:out value="${detail.quantity}"/></td>
-        <td><c:out value="${detail.uAuComision}"/></td>
-        <td><span class="suma"><c:out value="${detail.totalComision}"/></span></td>
-        <td><c:out value="${detail.whsCode}"/></td>
+        <td style="text-align: right;"><c:out value="${detail.quantity}"/></td>
+        <td style="text-align: right;"><c:out value="${detail.uAuComision}"/></td>
+        <td style="text-align: right;"><span class="suma"><c:out value="${detail.totalComision}"/></span></td>
+        <td style="text-align: right;"><c:out value="${detail.whsCode}"/></td>
       </tr>
     </c:forEach>
     <tr>
       <th colspan="4">Total</th>
-      <th colspan="2"><span class="totalSuma">0</span></th>
+      <th style="text-align: right;"><span class="totalSuma">0</span></th>
+      <th>&nbsp;</th>
     </tr>
   </table>
 </div>
-so p
+
 <c:choose>
   <c:when test="${canEdit}">
+    <spring:hasBindErrors name="saleOrder">
+      <ul>
+        <c:forEach items="${errors.allErrors}" var="error">
+          <li><spring:message code="${error.code}"/></li>
+        </c:forEach>
+      </ul>
+    </spring:hasBindErrors>
     <form action="${ctx}/saveOrder" method="post">
       <div class="form-horizontal">
         <input type="hidden" name="backUrl" value="${backUrl}"/>
@@ -88,7 +99,7 @@ so p
         <div class="form-group">
           <label class="control-label col-xs-12 col-sm-2"><spring:message code="saleOrder.label.parking"/></label>
 
-          <div class="col-xs-12 col-sm-9"><input type="text" class="form-control" name="parking"
+          <div class="col-xs-12 col-sm-4"><input type="text" class="form-control" name="parking"
                                                  value="${saleOrder.parking}"/></div>
         </div>
         <div class="form-group">
@@ -97,24 +108,32 @@ so p
           <div class="col-xs-12 col-sm-9" style="margin-bottom: 10px;">
               <%--<input type="text" class="form-control" id="technicianAdd" value=""/>--%>
               <%--<portal:technicianAutocomplete inputId="technicianAdd" callback="callback" resetOnEnter="true"/>--%>
-            <div class="form-inline">
-              <select name="technicianSelector" id="technicianSelector" class="form-control col-xs-12 col-sm-7">
-                <option value=""><spring:message code="saleOrder.label.technician.default"/></option>
-                <c:forEach items="${technicians}" var="tech">
-                  <option value="${tech.id}" id="option-${tech.id}" data-display-name="${tech.code} - ${tech.fullName}">
-                    <c:out
-                        value="${tech.fullName}"/></option>
-                </c:forEach>
-              </select>
-              <input type="button" class="btn btn-default col-xs-12 col-xs-4" id="technicianAdd"
+            <div>
+              <div class="col-xs-12 col-sm-4" style="padding-left: 1px;">
+                <select name="technicianSelector" style="display: inline-block;" id="technicianSelector"
+                        class="form-control">
+                  <option value=""><spring:message code="saleOrder.label.technician.default"/></option>
+                  <c:forEach items="${technicians}" var="tech">
+                    <option value="${tech.id}" id="option-${tech.id}"
+                            data-display-name="${tech.code} - ${tech.fullName}">
+                      <c:out
+                          value="${tech.fullName}"/></option>
+                  </c:forEach>
+                </select>
+              </div>
+              <input type="button" class="btn btn-default col-xs-12 col-sm-1" id="technicianAdd"
                      value="<spring:message code="saleOrder.label.technician.button.add"/>"/>
             </div>
-            <span id="technicians">
+          </div>
+        </div>
+        <div class="form-group">
+          <span id="technicians" class="col-xs-12 col-sm-4 col-sm-offset-4">
               <c:if test="${not empty saleOrder.technicians}">
                 <ul>
                   <c:forEach items="${saleOrder.technicians}" var="tech">
-                    <li class="liTechnicians liTech${tech.technician.id}">
-                      <span><input type="hidden" name="idTechnicians" value="${tech.technician.id}"/>
+                    <li class="col-xs-offset-2 liTechnicians liTech${tech.technician.id}">
+                      <span><input type="hidden" name="idTechnicians"
+                                   value="${tech.technician.id}"/>
                       <c:out value="${tech.technician.fullName}"/>&nbsp;$
                         <span class="comission">${tech.comission}</span>
                       <a href="javascript:void(0);" class="deleteTechnician">
@@ -126,14 +145,13 @@ so p
                 </ul>
               </c:if>
             </span>
-          </div>
         </div>
         <div class="form-group">
           <label class="control-label col-xs-12 col-sm-2"><spring:message code="saleOrder.label.status"/></label>
 
-          <div class="col-xs-12 col-sm-9">
+          <div class="col-xs-12 col-sm-4">
             <select name="status.id" id="statusId" class="form-control">
-              <option value=""><spring:message code="saleOrder.label.status.default"/></option>
+              <%--<option value=""><spring:message code="saleOrder.label.status.default"/></option>--%>
               <c:forEach items="${status}" var="st">
                 <option value="${st.id}" ${saleOrder.status.id == st.id ? 'selected="selected"':''}><c:out
                     value="${st.name}"/></option>
@@ -146,11 +164,11 @@ so p
             <input type="submit" class="btn btn-primary"
                    value="<spring:message code="saleOrder.label.submit"/>"/>&nbsp;&nbsp;
             <c:choose>
-              <c:when test="${not empty backUrl}"><a href="${backUrl}" class="btn btn-default"><spring:message
+              <c:when test="${not empty backUrl}"><a href="${backUrl}" class="btn btn-primary"><spring:message
                   code="application.back"/></a></c:when>
-              <c:otherwise><a href="${ctx}/order" class="btn btn-default"><spring:message code="application.back"/></a></c:otherwise>
+              <c:otherwise><a href="${ctx}/order" class="btn btn-primary"><spring:message code="application.back"/></a></c:otherwise>
             </c:choose>
-            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#history"><spring:message
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#history"><spring:message
                 code="saleOrder.log.show"/></button>
           </div>
         </div>
@@ -185,12 +203,12 @@ so p
     <div class="form-group">
       <div class="col-xs-12 col-sm-3 col-sm-offset-9">
         <c:choose>
-          <c:when test="${not empty backUrl}"><a href="${backUrl}" class="btn btn-default"><spring:message
+          <c:when test="${not empty backUrl}"><a href="${backUrl}" class="btn btn-primary"><spring:message
               code="application.back"/></a></c:when>
-          <c:otherwise><a href="${ctx}/order" class="btn btn-default"><spring:message
+          <c:otherwise><a href="${ctx}/order" class="btn btn-primary"><spring:message
               code="application.back"/></a></c:otherwise>
         </c:choose>
-        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#history"><spring:message
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#history"><spring:message
             code="saleOrder.log.show"/></button>
       </div>
     </div>
@@ -224,7 +242,7 @@ so p
   }
 
   function callback(obj) {
-    var html = '<li class="liTechnicians liTech' + obj.id + '"><span><input type="hidden" name="idTechnicians" value="' + obj.id + '"/>'
+    var html = '<li class="col-xs-offset-2 liTechnicians liTech' + obj.id + '"><span><input type="hidden" name="idTechnicians" value="' + obj.id + '"/>'
         + obj.displayName + ' $<span class="comission">0</span>'
         + ' <a href="javascript:void(0);" class="deleteTechnician" data-id-technician="' + obj.id +
         '"><span class="glyphicon glyphicon-remove" title="<spring:message code="saleOrder.label.technicians.remove"/>"></span></a></span></li>'
@@ -238,13 +256,13 @@ so p
     }
   }
   function sumaTotalComision() {
-    var importeTotal = 0
+    var importeTotal = 0.0;
     $("span.suma").each(
         function () {
-          importeTotal = importeTotal + parseInt($(this).text());
+          importeTotal = importeTotal + parseFloat($(this).text());
         }
     );
-    $("span.totalSuma").text(importeTotal);
+    $("span.totalSuma").text(importeTotal.toFixed(1));
   }
 
   function calcularComision() {

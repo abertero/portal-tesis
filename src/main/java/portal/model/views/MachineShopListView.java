@@ -133,6 +133,11 @@ public class MachineShopListView {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    @Transient
+    public boolean isFinished() {
+        return status != null && status.equals("Finalizado");
+    }
     // </editor-fold>
 
     public static List<MachineShopListView> findAll(int page) {

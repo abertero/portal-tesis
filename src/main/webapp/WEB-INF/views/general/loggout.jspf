@@ -1,7 +1,18 @@
-<div style="z-index: 10; position: absolute; right: 0; top: 0;" class="panel panel-default">
-  <div class="panel-body">
-    <span><spring:message code="menu.welcome.message"/>&nbsp;<c:out value="${user.fullName}"/></span>
+<div class="loggoutPanel">
+  <div style="z-index: 10; position: absolute; right: 0; top: 0;">
+    <div>
+      <h3 class="welcomeMessage"><spring:message code="menu.welcome.message"/>&nbsp;<c:out
+          value="${user.fullName}"/></h3>
 
-    <p><a href="${ctx}/loggout"><spring:message code="menu.loggout"/></a></p>
+      <p>
+        <button type="button" class="btn btn-primary" onclick="location.href='${ctx}/loggout'"><spring:message
+            code="menu.loggout"/></button>
+      </p>
+    </div>
+  </div>
+
+  <div style="z-index: 10; position: absolute; left: 20px; top: 20px;">
+    <a href="${ctx}/menu"><img class="img-responsive img-rounded"
+                               src="${ctx}/static/css/img/logo-autobahn.png"/></a>
   </div>
 </div>

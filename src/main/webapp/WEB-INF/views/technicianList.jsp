@@ -2,6 +2,7 @@
 <html>
 <%@include file="general/header.jspf" %>
 <body>
+<%@include file="general/loggout.jspf" %>
 <h1><spring:message code="technician.title"/></h1>
 
 <div class="container" style="padding-top: 1em;">
@@ -23,7 +24,7 @@
         <td><c:out value="${technician.lastName}"/></td>
         <!-- <span class="glyphicon glyphicon-edit" title="<spring:message code="userList.action.edit"/>"></span>-->
         <td><a href="technician/<c:out value="${technician.altKey}"/>?canEdit=true"><span class="glyphicon glyphicon-edit" title="Editar"></a>&nbsp;|&nbsp;
-            <a href="#"><span class="glyphicon glyphicon-remove" title="Eliminar"s></span></a>
+            <a href="technicianDelete/<c:out value="${technician.altKey}"/>"><span class="glyphicon glyphicon-remove" title="Eliminar"s></span></a>
         </td>
       </tr>
     </c:forEach>
@@ -32,8 +33,10 @@
   <c:url var="registerUrl" value="/registerTechnician">
     <c:param name="backUrl" value="${ctx}/technician"/>
   </c:url>
-  <a class="btn btn-primary" href="${registerUrl}"><spring:message code="technician.create"/></a>
-  <a class="btn btn-primary" href="menu">Volver</a>
+  <div style="float:right">
+    <a class="btn btn-primary" href="${registerUrl}"><spring:message code="technician.create"/></a>
+    <a class="btn btn-primary" href="menu">Volver</a>
+  </div>
 </div>
 </body>
 </html>

@@ -1,18 +1,25 @@
-body{
-    background:#F7F7F7;
+body {
+    background: #F7F7F7;
     color: #333;
     font-family: 'Terminal Dosis', Arial, sans-serif;
     font-size: 13px;
 }
-h1{
+
+h1 {
     margin: 0px;
     padding: 20px;
     font-size: 32px;
     color: #000;
-    text-shadow: 1px 1px 1px rgba(255,255,255,0.9);
+    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.9);
     text-align: center;
     font-weight: 400;
 }
-.error{
+
+.error {
     color: #c9302c;
+}
+
+.welcomeMessage {
+    font-size: large;
+    margin: 5px 10px 5px 0px;
 }

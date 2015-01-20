@@ -55,7 +55,7 @@ public class ApplicationController {
 
     @RequestMapping(value = "registerUser", method = RequestMethod.GET)
     public ModelAndView registerUser(@RequestParam(required = false) String backUrl, HttpServletRequest request) {
-        return doUser(new User(), true, backUrl, request);
+        return doUser(new User(), true, backUrl, request, null);
     }
 
     @RequestMapping(value = "user", method = RequestMethod.GET)
@@ -68,12 +68,12 @@ public class ApplicationController {
     @RequestMapping(value = "user/{altKeyUser}", method = RequestMethod.GET)
     public ModelAndView userDetail(@PathVariable String altKeyUser, @RequestParam(required = false, defaultValue = "false") Boolean canEdit,
                                    @RequestParam(required = false) String backUrl, HttpServletRequest request) {
-        return doUser(User.findByAltKey(altKeyUser), canEdit != null && canEdit, backUrl, request);
+        return doUser(User.findByAltKey(altKeyUser), canEdit != null && canEdit, backUrl, request, null);
     }
 
     @RequestMapping(value = "registerTechnician", method = RequestMethod.GET)
     public ModelAndView registerTechnician(@RequestParam(required = false) String backUrl, HttpServletRequest request) {
-        return doTechnician(new Technician(), true, backUrl, request);
+        return doTechnician(new Technician(), true, backUrl, request, null);
     }
 
     @RequestMapping(value = "technician", method = RequestMethod.GET)
@@ -86,7 +86,7 @@ public class ApplicationController {
     @RequestMapping(value = "technician/{altKeyTechnician}", method = RequestMethod.GET)
     public ModelAndView technicianDetail(@PathVariable String altKeyTechnician, @RequestParam(required = false, defaultValue = "false") Boolean canEdit,
                                          @RequestParam(required = false) String backUrl, HttpServletRequest request) {
-        return doTechnician(Technician.findByAltKey(altKeyTechnician), canEdit != null && canEdit, backUrl, request);
+        return doTechnician(Technician.findByAltKey(altKeyTechnician), canEdit != null && canEdit, backUrl, request, null);
     }
 
     @RequestMapping(value = "machineShop", method = RequestMethod.GET)
@@ -117,7 +117,7 @@ public class ApplicationController {
     @RequestMapping(value = "order/{docNum}", method = RequestMethod.GET)
     public ModelAndView saleOrderDetail(@PathVariable Long docNum, @RequestParam(required = false, defaultValue = "false") Boolean canEdit,
                                         @RequestParam(required = false) String backUrl, HttpServletRequest request) {
-        return doSaleOrder(SaleOrder.findByDocNum(docNum, true), canEdit, backUrl, request);
+        return doSaleOrder(SaleOrder.findByDocNum(docNum, true), canEdit, backUrl, request, null);
     }
 
     @RequestMapping(value = "reports", method = RequestMethod.GET)
@@ -127,24 +127,33 @@ public class ApplicationController {
     //</editor-fold>
 
     //<editor-fold desc="Model">
-    private ModelAndView doUser(User user, boolean canEdit, String backUrl, HttpServletRequest request) {
+    private ModelAndView doUser(User user, boolean canEdit, String backUrl, HttpServletRequest request, BindingResult errors) {
         ModelAndView mv = doMenu(request, "user", backUrl);
         mv.addObject("user", user);
+        if (errors != null) {
+            mv.addObject(BindingResult.MODEL_KEY_PREFIX + "user", errors);
+        }
         mv.addObject("roles", Role.findAll());
         mv.addObject("canEdit", canEdit);
         return mv;
     }
 
-    private ModelAndView doTechnician(Technician technician, boolean canEdit, String backUrl, HttpServletRequest request) {
+    private ModelAndView doTechnician(Technician technician, boolean canEdit, String backUrl, HttpServletRequest request, BindingResult errors) {
         ModelAndView mv = doMenu(request, "technician", backUrl);
         mv.addObject("technician", technician);
+        if (errors != null) {
+            mv.addObject(BindingResult.MODEL_KEY_PREFIX + "technician", errors);
+        }
         mv.addObject("canEdit", canEdit);
         return mv;
     }
 
-    private ModelAndView doSaleOrder(SaleOrder saleOrder, boolean canEdit, String backUrl, HttpServletRequest request) {
+    private ModelAndView doSaleOrder(SaleOrder saleOrder, boolean canEdit, String backUrl, HttpServletRequest request, BindingResult errors) {
         ModelAndView mv = doMenu(request, "saleOrder", backUrl);
         mv.addObject("saleOrder", saleOrder);
+        if (errors != null) {
+            mv.addObject(BindingResult.MODEL_KEY_PREFIX + "saleOrder", errors);
+        }
         mv.addObject("technicians", Technician.findNotInSaleOrder(saleOrder.getId()));
         mv.addObject("canEdit", canEdit);
         mv.addObject("status", SaleOrderStatus.findAll());
@@ -167,7 +176,7 @@ public class ApplicationController {
                                  @RequestParam(required = false) String backUrl, @RequestParam(required = false) Long[] idRoles, HttpServletRequest request) {
         user.validateUserForm(errors);
         if (errors.hasErrors()) {
-            return doUser(user, true, backUrl, request);
+            return doUser(user, true, backUrl, request, errors);
         }
         User userDB;
         if (user.getId() != null) {
@@ -195,7 +204,7 @@ public class ApplicationController {
                                        @RequestParam(required = false) String backUrl, HttpServletRequest request) {
         technician.validateTechnicianForm(errors);
         if (errors.hasErrors()) {
-            return doTechnician(technician, true, backUrl, request);
+            return doTechnician(technician, true, backUrl, request, errors);
         }
         Technician technicianDB;
         if (technician.getId() != null) {
@@ -220,7 +229,9 @@ public class ApplicationController {
                                   @RequestParam(required = false) String backUrl, HttpServletRequest request) {
         saleOrder.validateSaleOrderForm(errors);
         if (errors.hasErrors()) {
-            return doSaleOrder(saleOrder, true, backUrl, request);
+            SaleOrder dbOrder = SaleOrder.findByDocNum(saleOrder.getIdDocNum());
+            dbOrder.getData(saleOrder);
+            return doSaleOrder(dbOrder, true, backUrl, request, errors);
         }
         SaleOrder saleOrderDB;
         if (saleOrder.getId() != null) {
@@ -237,7 +248,7 @@ public class ApplicationController {
 //            return new ModelAndView("redirect:" + request.getContextPath() + StringUtils.defaultString(backUrl, "order"));
             return mv;
         }
-        return doSaleOrder(saleOrder, true, backUrl, request);
+        return doSaleOrder(saleOrder, true, backUrl, request, null);
     }
 
     @RequestMapping(value = "login", method = RequestMethod.POST)

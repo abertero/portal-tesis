@@ -3,7 +3,6 @@
 <%@include file="general/header.jspf" %>
 <body>
 <%@include file="general/loggout.jspf" %>
-
 <h1><spring:message code="saleOrderList.title"/></h1>
 
 <p><spring:message code="saleOrderList.detail"/></p>
@@ -70,10 +69,8 @@
       <a href="${ctx}/order?currentPage=${currentPage+1}&numberOfPages=${numberOfPages}"><span
           class="glyphicon glyphicon-chevron-right" title="Next."></span></a>
     </c:if>
-  </div>
-  <div class="col-xs-12 col-sm-2 col-sm-offset-10">
     <c:choose>
-      <c:when test="${not empty backUrl}"><a href="${backUrl}" class="btn btn-default"><spring:message
+      <c:when test="${not empty backUrl}"><a href="${backUrl}" class="btn btn-primary"><spring:message
           code="application.back"/></a></c:when>
       <c:otherwise><a href="${ctx}/menu" class="btn btn-default"><spring:message
           code="application.back"/></a></c:otherwise>

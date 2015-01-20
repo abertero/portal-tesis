@@ -35,7 +35,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal"><spring:message
+        <button type="button" class="btn btn-primary" data-dismiss="modal"><spring:message
             code="saleOrder.log.close"/></button>
       </div>
     </div>

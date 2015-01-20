@@ -126,7 +126,9 @@ public class SaleOrder extends BaseEntity {
     }
 
     public void validateSaleOrderForm(BindingResult errors) {
-
+        if (!SaleOrder.isValidParkingLot(idDocNum, parking)) {
+            errors.rejectValue("parking", "saleOrder.validate.parking.invalid");
+        }
     }
 
     private void loadViews(boolean loadLines) {
@@ -165,8 +167,8 @@ public class SaleOrder extends BaseEntity {
         return JPA.em().find(SaleOrder.class, id);
     }
 
-    public static boolean isValidParkingLot(Integer parking) {
-        Number count = JPA.querySingle("SELECT COUNT(s) FROM SaleOrder s WHERE s.parking = ?1", parking);
+    public static boolean isValidParkingLot(Long idDocNum, Integer parking) {
+        Number count = JPA.querySingle("SELECT COUNT(s) FROM SaleOrder s WHERE s.parking = ?1 AND s.idDocNum <> ?2", parking, idDocNum);
         return count != null && count.intValue() == 0;
     }
     //</editor-fold>

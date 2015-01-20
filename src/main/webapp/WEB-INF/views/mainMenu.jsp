@@ -9,26 +9,23 @@
 </head>
 <body>
 <%@include file="general/loggout.jspf" %>
-<!--
-<h1></h1>
-
-<p></p>
-
-<ul>
-  <li><a href="${ctx}/user"><spring:message code="menu.profileManager.name"/></a></li>
-  <li><a href="${ctx}/technician"><spring:message code="menu.technicianManager.name"/></a></li>
-  <li><a href="${ctx}/order"><spring:message code="menu.saleOrderList.name"/></a></li>
-  <li><a href="${ctx}/parking"><spring:message code="menu.parkingInfo.name"/></a></li>
-  <li><a href="${ctx}/order"><spring:message code="menu.reports.name"/></a></li>
-</ul>
--->
 <!-- INICIO -->
 <div class="container">
   <h1><spring:message code="menu.title"/><span><spring:message code="menu.detail"/></span></h1>
 
+  <script>
+    var roles = [
+      <c:forEach var="rolUser" items="${usrRol.roles}">
+      { 'name' : '${rolUser.name}', 'id' : '${rolUser.id}' },
+      </c:forEach>
+    ];
+    $.cookie("people", JSON.stringify(roles));
+
+  </script>
   <div class="content">
 
     <ul class="ca-menu">
+
       <li>
         <a href="${ctx}/user">
           <span class="ca-icon">U</span>
@@ -88,6 +85,8 @@
   </div>
   <!-- content -->
 </div>
+<script src="${ctx}/static/js/jquery-1.11.1.min.js"></script>
+<script src="${ctx}/static/js/jquery.cookie.js"></script>
 <script src="${ctx}/static/js/bootstrap.min.js"></script>
 </body>
 </html>
